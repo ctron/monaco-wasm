@@ -1,0 +1,119 @@
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --text: #1f2328;
+  --muted: #59636e;
+  --border: #d1d9e0;
+  --accent: #0969da;
+  --accent-text: #ffffff;
+  color-scheme: light dark;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --text: #e6edf3;
+    --muted: #9198a1;
+    --border: #30363d;
+    --accent: #4493f8;
+    --accent-text: #0d1117;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 2rem 1rem 3rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a {
+  color: var(--accent);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2.2rem;
+}
+
+.tagline {
+  max-width: 40rem;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--muted);
+}
+
+.cards {
+  display: grid;
+  /* Side by side only when the Cargo snippets fit without scrolling. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 31rem), 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-width: 0;
+}
+
+.card h2 {
+  margin: 0;
+}
+
+.card p {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+}
+
+pre {
+  margin: 0 0 0.5rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.button {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.button:hover {
+  filter: brightness(1.1);
+}
+
+.features ul {
+  padding-left: 1.2rem;
+}
+
+.features li {
+  margin-bottom: 0.4rem;
+}
+
+footer {
+  margin-top: 2rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}

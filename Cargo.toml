@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "examples/leptos-basic", "examples/leptos-hydrate", "examples/quickstart", "examples/wasm-basic", "examples/yew-basic"]
+members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "examples/leptos-basic", "examples/leptos-hydrate", "examples/quickstart-leptos", "examples/quickstart-yew", "examples/wasm-basic", "examples/yew-basic"]
 
 [workspace.package]
 version = "0.1.0"

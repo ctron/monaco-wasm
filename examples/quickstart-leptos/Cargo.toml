@@ -1,13 +1,13 @@
 [package]
-name = "quickstart"
+name = "quickstart-leptos"
 version = "0.0.0"
 edition = "2024"
 publish = false
 
 [dependencies]
-# In your own project: monaco-yew = "0.1"
-monaco-yew = { path = "../../crates/monaco-yew" }
-yew = { version = "0.23", features = ["csr"] }
+leptos = { version = "0.8", features = ["csr"] }
+# In your own project: monaco-leptos = { version = "0.1", features = ["csr"] }
+monaco-leptos = { path = "../../crates/monaco-leptos", features = ["csr"] }
 # Only for the playground's extras (formatting, download, theme detection).
 js-sys = "0.3.77"
 serde_json = { version = "1", features = ["preserve_order"] }
@@ -17,8 +17,6 @@ web-sys = { version = "0.3.77", features = [
     "BlobPropertyBag",
     "Document",
     "HtmlAnchorElement",
-    "HtmlInputElement",
-    "HtmlSelectElement",
     "MediaQueryList",
     "Url",
     "Window",

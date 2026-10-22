@@ -9,13 +9,14 @@ there is no npm install, CDN, or worker configuration.
 ```sh
 cargo install trunk                 # once
 rustup target add wasm32-unknown-unknown
-cd examples/quickstart
+cd examples/quickstart-yew
 trunk serve --open
 ```
 
 `trunk build --release --public-url /my-path/` produces a static site in `dist/`. Deploy the whole
 directory, including `snippets/`, which contains the bundled Monaco runtime. The repository's
-`.github/workflows/pages.yml` publishes it to GitHub Pages.
+`tools/build-pages.sh` builds it, together with the Leptos version and the landing page, for
+GitHub Pages.
 
 ## Start your own project from it
 

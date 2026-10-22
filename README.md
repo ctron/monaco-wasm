@@ -5,8 +5,10 @@ Monaco editor for Rust/WASM, with Yew and Leptos components. See [DESIGN.md](DES
 Status: milestones 1–4 complete (package proof, core API, Yew, Leptos). Release preparation is
 next.
 
-Try it: [`examples/quickstart`](examples/quickstart) is a JSON playground built with the Yew
-component. `.github/workflows/pages.yml` publishes it to GitHub Pages.
+Try it: [`examples/quickstart-yew`](examples/quickstart-yew) and
+[`examples/quickstart-leptos`](examples/quickstart-leptos) are the same JSON playground built with
+each component. `.github/workflows/pages.yml` publishes both to GitHub Pages behind a landing page
+([`examples/pages`](examples/pages)).
 
 ## Using it
 
@@ -122,7 +124,10 @@ node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack 
 node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk builds above
 node browser-tests/smoke.mjs examples/leptos-basic/dist
 tools/hydrate-check.sh --release                          # cargo-leptos SSR + hydration fixture (port 3400)
-node browser-tests/quickstart.mjs examples/quickstart/dist --base /monaco-yew/   # after trunk build --public-url /monaco-yew/
+tools/build-pages.sh site /monaco-yew/                    # landing page + both quickstarts, as on GitHub Pages
+node browser-tests/pages.mjs site --base /monaco-yew/
+node browser-tests/quickstart.mjs site/yew --base /monaco-yew/yew/
+node browser-tests/quickstart.mjs site/leptos --base /monaco-yew/leptos/
 tools/consumer-check.sh                                   # packaged consumer, Node stubbed out, with and without CSP
 ```
 

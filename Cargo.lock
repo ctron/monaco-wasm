@@ -1777,7 +1777,19 @@ dependencies = [
 ]
 
 [[package]]
-name = "quickstart"
+name = "quickstart-leptos"
+version = "0.0.0"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "monaco-leptos",
+ "serde_json",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "quickstart-yew"
 version = "0.0.0"
 dependencies = [
  "js-sys",

@@ -1,4 +1,5 @@
-// Checks the quickstart playground (examples/quickstart) as deployed.
+// Checks a quickstart playground (examples/quickstart-yew or
+// examples/quickstart-leptos) as deployed.
 //
 //   node quickstart.mjs <dist directory> [--base /monaco-yew/] [--screenshots <dir>]
 //

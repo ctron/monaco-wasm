@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="The Monaco editor for Rust web apps, with Yew and Leptos components. Bundled runtime: no npm, no CDN." />
+    <title>monaco-wasm: Monaco for Yew and Leptos</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <h1>monaco-wasm</h1>
+      <p class="tagline">
+        The <a href="https://microsoft.github.io/monaco-editor/">Monaco editor</a> for Rust web apps.
+        Add a Cargo dependency and get the editor, its workers, and JSON diagnostics. No npm, no CDN,
+        no worker setup.
+      </p>
+      <p class="links"><a href="__REPOSITORY_URL__">Source on GitHub</a></p>
+    </header>
+
+    <main>
+      <section class="cards" aria-label="Quickstarts">
+        <article class="card">
+          <h2>Yew</h2>
+          <p>A <code>MonacoEditor</code> component for Yew 0.23.</p>
+          <pre><code>[dependencies]
+yew = { version = "0.23", features = ["csr"] }
+monaco-yew = "0.1"</code></pre>
+          <pre><code>html! {
+    &lt;MonacoEditor
+        language="json"
+        initial_value="{}"
+    /&gt;
+}</code></pre>
+          <a class="button" href="yew/">Open the Yew quickstart</a>
+        </article>
+
+        <article class="card">
+          <h2>Leptos</h2>
+          <p>A <code>MonacoEditor</code> component for Leptos 0.8, with CSR, SSR, and hydration.</p>
+          <pre><code>[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+monaco-leptos = { version = "0.1", features = ["csr"] }</code></pre>
+          <pre><code>view! {
+    &lt;MonacoEditor
+        language="json"
+        initial_value="{}"
+    /&gt;
+}</code></pre>
+          <a class="button" href="leptos/">Open the Leptos quickstart</a>
+        </article>
+      </section>
+
+      <section class="features">
+        <h2>What you get</h2>
+        <ul>
+          <li><strong>Bundled runtime.</strong> Monaco 0.57 with the editor and JSON workers ships inside the crate and reaches your build through <code>wasm-bindgen</code>.</li>
+          <li><strong>The editor owns the text.</strong> Read or replace it through a handle when you need it; change events carry a version, not the document.</li>
+          <li><strong>Reactive settings.</strong> Language, theme, and editor options update the existing editor in place.</li>
+          <li><strong>Server rendering.</strong> The Leptos component renders an empty host on the server and creates the editor after hydration.</li>
+          <li><strong>Plain Rust/WASM too.</strong> <code>monaco-wasm</code> is the framework-free core both components build on.</li>
+          <li><strong>Strict CSP works</strong> with <code>worker-src blob:</code>, <code>style-src 'unsafe-inline'</code>, and <code>font-src data:</code>.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Each quickstart is a complete Trunk project you can copy as the start of your own app.</p>
+    </footer>
+  </body>
+</html>
