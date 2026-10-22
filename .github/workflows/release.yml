@@ -2,7 +2,8 @@ name: Release
 
 # Publishes the crates when a version tag (v0.1.0, ...) is pushed, using
 # crates.io trusted publishing: each crate's trusted publisher on crates.io
-# must name this repository and the workflow file release.yml.
+# must name this repository, the workflow file release.yml, and the
+# environment "release".
 
 on:
   push:
@@ -35,6 +36,7 @@ jobs:
   publish:
     needs: ensure-version
     runs-on: ubuntu-latest
+    environment: release
     permissions:
       contents: read
       # Lets crates-io-auth-action exchange the job's OIDC token for a

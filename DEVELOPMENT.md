@@ -115,8 +115,8 @@ The tag triggers `.github/workflows/release.yml`, which checks that the tag matc
 every crate (setting the tag's version with `cargo-workspaces` must not change any file) and runs
 `cargo publish --workspace`: `monaco-wasm` first, then the components. It authenticates with
 crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the three crates
-has a trusted publisher on crates.io for the repository `ctron/monaco-wasm` and the workflow
-`release.yml`, so no API token is stored.
+has a trusted publisher on crates.io for the repository `ctron/monaco-wasm`, the workflow
+`release.yml`, and the environment `release`, so no API token is stored.
 
 ## Minimum supported Rust
 
