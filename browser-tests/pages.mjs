@@ -82,7 +82,7 @@ try {
   const page = await open("light", { width: 1280, height: 900 });
   check((await page.title()).includes("monaco-wasm"), "landing page loads");
   const links = await page.locator(".card a.button").evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")));
-  check(JSON.stringify(links) === JSON.stringify(["yew/", "leptos/"]), `quickstart links ${JSON.stringify(links)}`);
+  check(JSON.stringify(links) === JSON.stringify(["yew/", "leptos/", "dioxus/"]), `quickstart links ${JSON.stringify(links)}`);
   const repository = await page.locator(".links a").getAttribute("href");
   check(!repository.includes("__REPOSITORY_URL__"), `repository link filled in (${repository})`);
   const clipped = await page.evaluate(() => [...document.querySelectorAll("pre")].filter((pre) => pre.scrollWidth > pre.clientWidth).length);
@@ -92,6 +92,7 @@ try {
   for (const [label, heading] of [
     ["Open the Yew quickstart", "monaco-yew"],
     ["Open the Leptos quickstart", "monaco-leptos"],
+    ["Open the Dioxus quickstart", "monaco-dioxus"],
   ]) {
     await page.goto(base);
     await page.click(`text=${label}`);

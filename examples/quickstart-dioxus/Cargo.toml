@@ -1,0 +1,24 @@
+[package]
+name = "quickstart-dioxus"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+monaco-dioxus = { workspace = true, features = ["web"] }
+dioxus = { workspace = true, features = ["launch", "web", "macro", "html", "signals", "hooks"] }
+# Only for the playground's extras (formatting, download, theme detection).
+js-sys.workspace = true
+serde_json = { workspace = true, features = ["preserve_order"] }
+wasm-bindgen.workspace = true
+web-sys = { workspace = true, features = [
+    "Blob",
+    "BlobPropertyBag",
+    "Document",
+    "HtmlAnchorElement",
+    "MediaQueryList",
+    "Url",
+    "Window",
+] }

@@ -1,15 +1,21 @@
 #!/bin/sh
-# Builds the cargo-leptos SSR + hydration fixture (examples/leptos-hydrate),
-# serves it, and runs browser-tests/hydrate.mjs against it.
+# Builds an SSR + hydration fixture, serves it, and runs
+# browser-tests/hydrate.mjs against it.
 #
-#   tools/hydrate-check.sh [--release]
+#   tools/hydrate-check.sh leptos    examples/leptos-hydrate, cargo-leptos, port 3400
+#   tools/hydrate-check.sh dioxus    examples/dioxus-hydrate, dx, port 3410
 #
-# Needs cargo-leptos, plus Node and Chrome for the check (set CHROMIUM to use
-# a system browser). The fixture listens on 127.0.0.1:3400.
+# Builds in release mode. Needs cargo-leptos or the Dioxus CLI (dx), plus Node
+# and Chrome for the check (set CHROMIUM to use a system browser).
 set -eu
 
+if [ $# -ne 1 ]; then
+    echo "usage: $0 leptos|dioxus" >&2
+    exit 2
+fi
+
 repo=$(cd "$(dirname "$0")/.." && pwd)
-log=$(mktemp "${TMPDIR:-/tmp}/leptos-hydrate.XXXXXX")
+log=$(mktemp "${TMPDIR:-/tmp}/hydrate-check.XXXXXX")
 server=""
 cleanup() {
     if [ -n "$server" ]; then
@@ -20,13 +26,30 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cd "$repo/examples/leptos-hydrate"
-cargo leptos build "$@"
-cargo leptos serve "$@" >"$log" 2>&1 &
-server=$!
+case "$1" in
+    leptos)
+        port=3400
+        cd "$repo/examples/leptos-hydrate"
+        cargo leptos build --release
+        cargo leptos serve --release >"$log" 2>&1 &
+        server=$!
+        ;;
+    dioxus)
+        port=3410
+        cd "$repo/examples/dioxus-hydrate"
+        dx build --release --web
+        cd "$repo/target/dx/dioxus-hydrate/release/web"
+        IP=127.0.0.1 PORT=$port ./server >"$log" 2>&1 &
+        server=$!
+        ;;
+    *)
+        echo "unknown fixture '$1', expected leptos or dioxus" >&2
+        exit 2
+        ;;
+esac
 
 for _ in $(seq 1 120); do
-    if curl -sf http://127.0.0.1:3400/ | grep -q "monaco-leptos hydration"; then
+    if curl -sf "http://127.0.0.1:$port/" | grep -q "monaco-$1 hydration"; then
         break
     fi
     if ! kill -0 "$server" 2>/dev/null; then
@@ -39,4 +62,4 @@ done
 
 cd "$repo/browser-tests"
 [ -d node_modules ] || npm ci
-node hydrate.mjs http://127.0.0.1:3400/
+node hydrate.mjs "http://127.0.0.1:$port/"

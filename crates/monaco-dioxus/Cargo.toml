@@ -1,0 +1,34 @@
+[package]
+name = "monaco-dioxus"
+description = "Dioxus component for the Monaco editor (web, fullstack), with the editor runtime and workers bundled"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+rust-version.workspace = true
+keywords = ["monaco", "editor", "dioxus", "wasm", "code-editor"]
+categories = ["wasm", "web-programming", "text-editors", "gui"]
+include = ["Cargo.toml", "README.md", "LICENSE", "src/**/*.rs"]
+
+[dependencies]
+dioxus = { workspace = true, features = ["macro", "html", "signals", "hooks"] }
+monaco-wasm.workspace = true
+wasm-bindgen.workspace = true
+web-sys = { workspace = true, features = ["console", "HtmlElement"] }
+
+[dev-dependencies]
+dioxus = { workspace = true, features = ["web"] }
+js-sys.workspace = true
+wasm-bindgen-futures.workspace = true
+wasm-bindgen-test.workspace = true
+web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
+
+[features]
+# Creates the editor in the browser. Enable it for web builds (and the client
+# side of fullstack apps), not for server builds.
+web = ["dioxus/web", "dioxus/mounted"]
+
+[lints]
+workspace = true

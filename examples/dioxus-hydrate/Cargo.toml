@@ -1,0 +1,18 @@
+[package]
+name = "dioxus-hydrate"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+dioxus = { workspace = true, features = ["fullstack", "launch", "macro", "html", "signals", "hooks"] }
+monaco-dioxus.workspace = true
+
+[features]
+web = ["dioxus/web", "monaco-dioxus/web"]
+server = ["dioxus/server"]
+
+[lints]
+workspace = true

@@ -1,4 +1,5 @@
-// Checks the cargo-leptos SSR + hydration fixture (examples/leptos-hydrate).
+// Checks an SSR + hydration fixture: examples/leptos-hydrate (cargo-leptos)
+// or examples/dioxus-hydrate (dx).
 //
 //   node hydrate.mjs [http://127.0.0.1:3400/]
 //
@@ -12,8 +13,9 @@ import { chromium } from "playwright-core";
 
 const url = process.argv[2] ?? "http://127.0.0.1:3400/";
 const INITIAL_TEXT = '"hydrated": true';
-// The component's inner host, with no children. Leptos SSR may append a ";".
-const EMPTY_HOST = /<div style="height: 100%; width: 100%;;?"><\/div>/;
+// The component's inner host, with no children. Leptos SSR may append a ";",
+// Dioxus adds hydration attributes.
+const EMPTY_HOST = /<div style="height: 100%; width: 100%;;?"[^>]*><\/div>/;
 
 // Serializes #editor without what Monaco adds to the host: its child nodes,
 // data attributes, and CSS custom properties on the host's style. Styles are
@@ -28,6 +30,10 @@ function normalizedEditor() {
   }
   for (const property of [...host.style]) {
     if (property.startsWith("--")) host.style.removeProperty(property);
+  }
+  // Dioxus hydration markers, which the client may remove.
+  for (const element of copy.querySelectorAll("[data-node-hydration]")) {
+    element.removeAttribute("data-node-hydration");
   }
   for (const element of copy.querySelectorAll("[style]")) {
     element.setAttribute("style", element.style.cssText);

@@ -1,0 +1,41 @@
+# monaco-dioxus quickstart
+
+A small JSON playground using the `MonacoEditor` Dioxus component: themes, language, editor options,
+JSON diagnostics, Format, Load sample, and Download. Everything comes from Cargo dependencies;
+there is no npm install, CDN, or worker configuration.
+
+## Run it
+
+```sh
+cargo binstall trunk                # once (or: cargo install trunk)
+rustup target add wasm32-unknown-unknown
+cd examples/quickstart-dioxus
+trunk serve --open
+```
+
+`trunk build --release --public-url /my-path/` produces a static site in `dist/`. Deploy the whole
+directory, including `snippets/`, which contains the bundled Monaco runtime. The repository's
+`tools/build-pages.sh` builds it, together with the Yew and Leptos versions and the landing page, for
+GitHub Pages.
+
+## Start your own project from it
+
+1. Copy this directory.
+2. In `Cargo.toml`, replace everything inherited from this repository's workspace
+   (`*.workspace = true`) with your own values: give the package a version, edition, and license,
+   and the dependencies their versions, for example `monaco-dioxus = { version = "0.1", features = ["web"] }`.
+3. Keep `index.html` (the Trunk entry point, with the `<div id="main">` Dioxus mounts into) and
+   edit `src/main.rs`.
+
+The parts worth copying:
+
+- `<MonacoEditor ... />` takes `language`, `initial_value`, `options`, `class`, `style`, and the
+  `on_ready`, `on_change`, and `on_error` callbacks.
+- Keep the `EditorHandle` from `on_ready` and read or replace text only when needed
+  (`value()`, `replace_document()`). `on_change` carries a version, not the text.
+- `set_theme` is global to all editors on the page.
+- The component defaults to `height: 20rem`; this example passes `style="height: 100%"` inside a
+  flex layout to fill the window.
+
+Monaco needs `worker-src blob:`, `style-src 'unsafe-inline'`, and `font-src data:` if you deploy
+with a Content Security Policy; see the repository README.

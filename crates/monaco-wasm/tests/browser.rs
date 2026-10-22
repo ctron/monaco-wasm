@@ -7,7 +7,7 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use js_sys::{Error as JsError, Object, Promise, Reflect};
+use js_sys::{Object, Promise, Reflect};
 use monaco_wasm::{
     ContentChange, Editor, EditorConfig, EditorError, EditorHandle, EditorOptions, LineNumbers,
     WordWrap, set_theme, sys,
@@ -526,7 +526,7 @@ fn assert_js_error(error: EditorError, expected_operation: &str, expected_messag
     match error {
         EditorError::JavaScript { operation, cause } => {
             assert_eq!(operation, expected_operation);
-            let message = cause.unchecked_into::<JsError>().message();
+            let message = cause.unchecked_into::<js_sys::Error>().message();
             assert_eq!(
                 String::from(message),
                 expected_message,

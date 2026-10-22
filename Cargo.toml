@@ -1,6 +1,20 @@
 [workspace]
 resolver = "3"
-members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "examples/leptos-basic", "examples/leptos-hydrate", "examples/quickstart-leptos", "examples/quickstart-yew", "examples/wasm-basic", "examples/yew-basic"]
+members = [
+    "crates/monaco-dioxus",
+    "crates/monaco-leptos",
+    "crates/monaco-wasm",
+    "crates/monaco-yew",
+    "examples/dioxus-basic",
+    "examples/dioxus-hydrate",
+    "examples/leptos-basic",
+    "examples/leptos-hydrate",
+    "examples/quickstart-dioxus",
+    "examples/quickstart-leptos",
+    "examples/quickstart-yew",
+    "examples/wasm-basic",
+    "examples/yew-basic",
+]
 
 [workspace.package]
 version = "0.1.1"
@@ -14,11 +28,13 @@ homepage = "https://ctron.github.io/monaco-wasm/"
 [workspace.dependencies]
 # The workspace's own crates. Cargo requires the version to be repeated here
 # for publishing; keep it equal to workspace.package.version.
+monaco-dioxus = { path = "crates/monaco-dioxus", version = "0.1.1" }
 monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.1" }
 monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.1" }
 monaco-yew = { path = "crates/monaco-yew", version = "0.1.1" }
 
 # Frameworks without default features: members select the rendering mode.
+dioxus = { version = "0.7", default-features = false }
 leptos = { version = "0.8", default-features = false }
 yew = { version = "0.23", default-features = false }
 

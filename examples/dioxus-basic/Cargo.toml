@@ -1,0 +1,15 @@
+[package]
+name = "dioxus-basic"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+dioxus = { workspace = true, features = ["launch", "web", "macro", "html", "signals", "hooks"] }
+monaco-dioxus = { workspace = true, features = ["web"] }
+web-sys = { workspace = true, features = ["console"] }
+
+[lints]
+workspace = true

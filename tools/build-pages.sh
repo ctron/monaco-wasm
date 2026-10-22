@@ -1,6 +1,6 @@
 #!/bin/sh
-# Builds the GitHub Pages site: the landing page at the root and the Yew and
-# Leptos quickstarts under yew/ and leptos/.
+# Builds the GitHub Pages site: the landing page at the root and the Yew,
+# Leptos, and Dioxus quickstarts under yew/, leptos/, and dioxus/.
 #
 #   tools/build-pages.sh <output dir> [base path] [repository URL]
 #
@@ -26,7 +26,7 @@ repository=${3:-https://github.com/}
 rm -rf "$out"
 mkdir -p "$out"
 
-for framework in yew leptos; do
+for framework in yew leptos dioxus; do
     (
         cd "$repo/examples/quickstart-$framework"
         trunk build --release --locked --public-url "${base}${framework}/" --dist "$out/$framework"

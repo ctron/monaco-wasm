@@ -8,10 +8,10 @@ How to build, test, and release this repository. For using the crates, see the
 | Path | Contents |
 | --- | --- |
 | `crates/monaco-wasm` | Core crate: vendored runtime (`js/`), bindings (`src/sys/`), `Editor` API |
-| `crates/monaco-yew`, `crates/monaco-leptos` | Framework components |
-| `examples/wasm-basic`, `yew-basic`, `leptos-basic` | Minimal demos driven by the smoke test |
-| `examples/leptos-hydrate` | cargo-leptos SSR and hydration fixture |
-| `examples/quickstart-yew`, `quickstart-leptos`, `pages` | The GitHub Pages site |
+| `crates/monaco-yew`, `crates/monaco-leptos`, `crates/monaco-dioxus` | Framework components |
+| `examples/wasm-basic`, `yew-basic`, `leptos-basic`, `dioxus-basic` | Minimal demos driven by the smoke test |
+| `examples/leptos-hydrate`, `dioxus-hydrate` | SSR and hydration fixtures (cargo-leptos, dx) |
+| `examples/quickstart-yew`, `quickstart-leptos`, `quickstart-dioxus`, `pages` | The GitHub Pages site |
 | `tools/runtime` | Builds the vendored Monaco runtime (Node, esbuild) |
 | `tools/bindings` | Generates `src/sys/generated.rs` (ts-gen) |
 | `browser-tests` | Playwright scripts for the demos and the site |
@@ -28,10 +28,11 @@ directory, so run it inside the example.
 
 ```sh
 cargo check -p monaco-wasm --target wasm32-unknown-unknown --locked
-cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos
+cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus
 wasm-pack build examples/wasm-basic --target web --out-dir pkg --no-pack
 (cd examples/yew-basic && trunk build --release --public-url /demo/)
 (cd examples/leptos-basic && trunk build --release --public-url /demo/)
+(cd examples/dioxus-basic && trunk build --release --public-url /demo/)
 ```
 
 A clean build of `monaco-wasm` takes about 65 s: wasm-bindgen copies the 5 MiB runtime snippet into
@@ -70,14 +71,17 @@ Needs Node and Chrome or Chromium. The component tests also need `wasm-bindgen-c
 `CHROMIUM=/usr/bin/chromium-browser` to use a system browser for the Playwright scripts.
 
 ```sh
-# Core API and both components, in headless Chrome
-cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos --target wasm32-unknown-unknown
+# Core API and the components, in headless Chrome
+cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus \
+  --features monaco-dioxus/web --target wasm32-unknown-unknown
 
 cd browser-tests && npm ci && cd ..
 node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build
 node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk builds
 node browser-tests/smoke.mjs examples/leptos-basic/dist
-tools/hydrate-check.sh --release                          # SSR + hydration fixture, port 3400
+node browser-tests/smoke.mjs examples/dioxus-basic/dist
+tools/hydrate-check.sh leptos                             # SSR + hydration fixture (cargo-leptos), port 3400
+tools/hydrate-check.sh dioxus                             # fullstack + hydration fixture (dx), port 3410
 tools/consumer-check.sh                                   # packaged crate, Node stubbed out, with and without CSP
 
 # The GitHub Pages site, as deployed
@@ -85,6 +89,7 @@ tools/build-pages.sh site /monaco-wasm/
 node browser-tests/pages.mjs site --base /monaco-wasm/
 node browser-tests/quickstart.mjs site/yew --base /monaco-wasm/yew/
 node browser-tests/quickstart.mjs site/leptos --base /monaco-wasm/leptos/
+node browser-tests/quickstart.mjs site/dioxus --base /monaco-wasm/dioxus/
 ```
 
 `tools/consumer-check.sh` verifies that building against the packaged crate never invokes Node.
@@ -118,7 +123,7 @@ The tag triggers `.github/workflows/release.yml`. It runs the full CI workflow o
 (including the semver check of the new version against the previous release), checks that the tag
 matches the version of every crate (setting the tag's version with `cargo-workspaces` must not
 change any file), and only when both pass runs `cargo publish --workspace`: `monaco-wasm` first, then the components. It authenticates with
-crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the three crates
+crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the four crates
 has a trusted publisher on crates.io for the repository `ctron/monaco-wasm`, the workflow
 `release.yml`, and the environment `release`, so no API token is stored.
 
@@ -139,5 +144,5 @@ versions a 1.88 user can build; CI checks this.
 | example WASM after wasm-opt | 58 KiB |
 
 Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
-Leptos 0.8.22, leptos_axum 0.8.10, cargo-leptos 0.3.7, esbuild 0.28.2, ts-gen 5341b86,
+Leptos 0.8.22, leptos_axum 0.8.10, cargo-leptos 0.3.7, Dioxus and dioxus-cli 0.7.10, esbuild 0.28.2, ts-gen 5341b86,
 TypeScript 5.9.3, and Chromium.

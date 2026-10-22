@@ -5,7 +5,7 @@
 [![docs.rs](https://img.shields.io/docsrs/monaco-wasm)](https://docs.rs/monaco-wasm)
 
 The [Monaco editor](https://microsoft.github.io/monaco-editor/) for Rust web applications, with
-components for [Yew](https://yew.rs) and [Leptos](https://leptos.dev). The editor runtime, its
+components for [Yew](https://yew.rs), [Leptos](https://leptos.dev), and [Dioxus](https://dioxuslabs.com). The editor runtime, its
 stylesheet, and the editor and JSON workers are bundled in the crate: add a Cargo dependency, with
 no npm install, CDN, or worker configuration.
 
@@ -13,6 +13,7 @@ no npm install, CDN, or worker configuration.
 | --- | --- | --- |
 | [`monaco-yew`](crates/monaco-yew) | A `MonacoEditor` component for Yew 0.23 | [docs.rs](https://docs.rs/monaco-yew) |
 | [`monaco-leptos`](crates/monaco-leptos) | A `MonacoEditor` component for Leptos 0.8 (CSR, SSR, hydration) | [docs.rs](https://docs.rs/monaco-leptos) |
+| [`monaco-dioxus`](crates/monaco-dioxus) | A `MonacoEditor` component for Dioxus 0.7 (web, fullstack) | [docs.rs](https://docs.rs/monaco-dioxus) |
 | [`monaco-wasm`](crates/monaco-wasm) | The framework-free core: plain Rust/WASM, or your own integration | [docs.rs](https://docs.rs/monaco-wasm) |
 
 The documentation covers the properties, reading and replacing the text, editor options,
@@ -63,6 +64,30 @@ A complete example: [`examples/quickstart-leptos`](examples/quickstart-leptos)
 ([live](https://ctron.github.io/monaco-wasm/leptos/)); for SSR with cargo-leptos, see
 [`examples/leptos-hydrate`](examples/leptos-hydrate).
 
+## Dioxus
+
+Enable the `web` feature (in fullstack apps, only for the client build):
+
+```toml
+[dependencies]
+dioxus = { version = "0.7", features = ["web"] }
+monaco-dioxus = { version = "0.1", features = ["web"] }
+```
+
+```rust
+use dioxus::prelude::*;
+use monaco_dioxus::MonacoEditor;
+
+#[component]
+fn App() -> Element {
+    rsx! { MonacoEditor { language: "json", initial_value: "{{}}" } }
+}
+```
+
+A complete example: [`examples/quickstart-dioxus`](examples/quickstart-dioxus)
+([live](https://ctron.github.io/monaco-wasm/dioxus/)); for fullstack with `dx`, see
+[`examples/dioxus-hydrate`](examples/dioxus-hydrate).
+
 ## Plain Rust/WASM
 
 ```toml
@@ -92,6 +117,7 @@ See [`examples/wasm-basic`](examples/wasm-basic).
 | Languages | JSON (with validation), YAML, plain text |
 | Yew | 0.23 |
 | Leptos | 0.8 |
+| Dioxus | 0.7 (web, fullstack) |
 | Browsers | Tested with Chromium |
 
 ## Development

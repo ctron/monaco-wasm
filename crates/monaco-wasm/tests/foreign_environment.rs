@@ -4,7 +4,6 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use js_sys::Error as JsError;
 use monaco_wasm::{Editor, EditorConfig, EditorError, set_theme};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
@@ -37,7 +36,7 @@ fn foreign_monaco_environment_is_a_setup_error() {
     match Editor::new(&host, EditorConfig::default()) {
         Err(EditorError::JavaScript { operation, cause }) => {
             assert_eq!(operation, "initialize runtime");
-            let message = String::from(cause.unchecked_into::<JsError>().message());
+            let message = String::from(cause.unchecked_into::<js_sys::Error>().message());
             assert!(message.contains("foreign MonacoEnvironment"), "{message}");
         }
         Err(other) => panic!("unexpected error {other:?}"),

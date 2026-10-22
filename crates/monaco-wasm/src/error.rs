@@ -1,4 +1,3 @@
-use js_sys::Error as JsError;
 use std::fmt;
 use wasm_bindgen::{JsCast, JsValue};
 
@@ -32,7 +31,7 @@ impl fmt::Display for EditorError {
             Self::InvalidOptions(reason) => write!(f, "invalid editor options: {reason}"),
             Self::JavaScript { operation, cause } => {
                 let message = cause
-                    .dyn_ref::<JsError>()
+                    .dyn_ref::<js_sys::Error>()
                     .map(|error| String::from(error.message()))
                     .or_else(|| cause.as_string())
                     .unwrap_or_else(|| format!("{cause:?}"));

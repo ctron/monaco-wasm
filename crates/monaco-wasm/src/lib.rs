@@ -21,6 +21,13 @@
 //! [quickstart](https://github.com/ctron/monaco-wasm/tree/main/examples/quickstart-leptos) and the
 //! [live demo](https://ctron.github.io/monaco-wasm/leptos/).
 //!
+//! # Dioxus
+//!
+//! [`monaco-dioxus`](https://docs.rs/monaco-dioxus) provides a `MonacoEditor` component for
+//! [Dioxus](https://dioxuslabs.com) web and fullstack apps. See the
+//! [quickstart](https://github.com/ctron/monaco-wasm/tree/main/examples/quickstart-dioxus) and the
+//! [live demo](https://ctron.github.io/monaco-wasm/dioxus/).
+//!
 //! # Example
 //!
 //! ```rust

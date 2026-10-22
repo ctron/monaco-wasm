@@ -1,6 +1,6 @@
 name: Pages
 
-# Builds the site (landing page, Yew and Leptos quickstarts) with
+# Builds the site (landing page, Yew, Leptos, and Dioxus quickstarts) with
 # tools/build-pages.sh, checks it in Chrome, and deploys it to GitHub Pages.
 # Enable Pages with "Source: GitHub Actions" in the repository settings.
 
@@ -51,7 +51,7 @@ jobs:
           (cd browser-tests && npm ci)
           export CHROMIUM="$(command -v google-chrome)"
           node browser-tests/pages.mjs site --base "$BASE"
-          for framework in yew leptos; do
+          for framework in yew leptos dioxus; do
             node browser-tests/quickstart.mjs "site/$framework" --base "$BASE$framework/"
           done
       - uses: actions/upload-pages-artifact@v5
