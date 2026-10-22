@@ -113,3 +113,20 @@ jobs:
       # Installs the ts-gen rev pinned in tools/bindings/package.json.
       - run: npm run bindings:check
         working-directory: tools/bindings
+
+  # Single check for branch protection: succeeds only if every job above
+  # succeeded. Add new jobs to `needs`.
+  ci:
+    if: always()
+    needs: [rust, semver, msrv, browser, runtime, bindings]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the results of all jobs
+        env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+        run: |
+          echo "job results: $RESULTS"
+          if [ "$(echo "$RESULTS" | jq 'all(. == "success")')" != "true" ]; then
+            echo "::error::Not all CI jobs succeeded."
+            exit 1
+          fi

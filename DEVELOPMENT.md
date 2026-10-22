@@ -94,7 +94,9 @@ node browser-tests/quickstart.mjs site/leptos --base /monaco-wasm/leptos/
 - `.github/workflows/ci.yml`: formatting, clippy (wasm, native, SSR), semver checks against the
   latest crates.io release (cargo-semver-checks), the minimum Rust version
   with a freshly resolved lockfile, all browser tests, the demos, the hydration fixture, the
-  packaged-consumer check, packaging, and the runtime and bindings checks.
+  packaged-consumer check, packaging, and the runtime and bindings checks. The final `ci` job succeeds only
+  if all other jobs did; it is the check to require in branch protection. Add new jobs to its
+  `needs`.
 - `.github/workflows/pages.yml`: builds the site with `tools/build-pages.sh`, checks it, and
   deploys it on every push to `main`.
 
