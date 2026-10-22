@@ -15,9 +15,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --target wasm32-unknown-unknown --locked -- -D warnings -A long_running_const_eval
-      - run: cargo clippy -p monaco-wasm --all-targets --locked -- -D warnings
-      - run: cargo test -p monaco-wasm --locked
+      - run: cargo clippy -p monaco-wasm -p monaco-yew --all-targets --locked -- -D warnings
+      - run: cargo test -p monaco-wasm -p monaco-yew --locked
       - run: cargo package -p monaco-wasm --locked
+      # monaco-yew is packaged after monaco-wasm is published; see tools/consumer-check.sh.
 
   browser:
     runs-on: ubuntu-latest
@@ -33,12 +34,17 @@ jobs:
           version=$(cargo metadata --format-version 1 --locked | jq -r '.packages[] | select(.name == "wasm-bindgen") | .version')
           cargo install wasm-bindgen-cli --version "$version" --locked
           cargo install wasm-pack --locked
+          cargo install trunk --locked
       # The runner image provides Chrome and a matching chromedriver.
-      - name: Core API browser tests
-        run: CHROMEDRIVER="$CHROMEWEBDRIVER/chromedriver" cargo test -p monaco-wasm --target wasm32-unknown-unknown --locked
-      - name: Packaged consumer without Node, with and without CSP
+      - name: Core API and Yew component browser tests
+        run: CHROMEDRIVER="$CHROMEWEBDRIVER/chromedriver" cargo test -p monaco-wasm -p monaco-yew --target wasm32-unknown-unknown --locked
+      - name: Yew demo under /demo/
         run: |
           (cd browser-tests && npm ci)
+          (cd examples/yew-basic && trunk build --release --public-url /demo/)
+          CHROMIUM="$(command -v google-chrome)" node browser-tests/smoke.mjs examples/yew-basic/dist
+      - name: Packaged consumer without Node, with and without CSP
+        run: |
           CHROMIUM="$(command -v google-chrome)" tools/consumer-check.sh
 
   runtime:

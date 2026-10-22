@@ -1,0 +1,24 @@
+[package]
+name = "monaco-yew"
+description = "Yew component for the Monaco editor, with the editor runtime bundled"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+keywords = ["monaco", "editor", "yew", "wasm"]
+categories = ["wasm", "web-programming", "text-editors", "gui"]
+
+[dependencies]
+monaco-wasm.workspace = true
+web-sys = { workspace = true, features = ["HtmlElement"] }
+yew = { version = "0.23", default-features = false }
+
+[dev-dependencies]
+js-sys.workspace = true
+wasm-bindgen.workspace = true
+wasm-bindgen-futures = "0.4.50"
+wasm-bindgen-test = "0.3.50"
+web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
+yew = { version = "0.23", features = ["csr"] }
+
+[lints]
+workspace = true

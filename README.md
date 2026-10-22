@@ -1,9 +1,9 @@
 # monaco-wasm
 
-Monaco editor for Rust/WASM, with Yew and Leptos adapters planned. See [DESIGN.md](DESIGN.md).
+Monaco editor for Rust/WASM, with a Yew component and a Leptos component planned. See
+[DESIGN.md](DESIGN.md).
 
-Status: milestone 1 (package proof) complete. Only the `monaco-wasm` core crate and the plain WASM
-example exist; the Yew and Leptos adapters come next.
+Status: milestones 1–3 complete (package proof, core API, Yew). The Leptos adapter is next.
 
 ## Using it
 
@@ -34,6 +34,28 @@ Requirements for the page:
 - No other `MonacoEnvironment` may be defined on the page; editor creation then fails with a setup
   error instead of overwriting it.
 
+Yew:
+
+```toml
+[dependencies]
+yew = { version = "0.23", features = ["csr"] }
+monaco-yew = "0.1"
+```
+
+```rust
+use monaco_yew::MonacoEditor;
+use yew::prelude::*;
+
+#[function_component(App)]
+fn app() -> Html {
+    html! { <MonacoEditor language="json" initial_value="{}" /> }
+}
+```
+
+The component owns its text: `initial_value` is read once, and nothing is written back on
+rerender. Use the `EditorHandle` from `on_ready` to read or replace the document, or remount with a
+new `key`. The container defaults to `height: 20rem; width: 100%`; a `style` prop is appended.
+
 ## Development
 
 ```sh
@@ -41,6 +63,7 @@ cargo check -p monaco-wasm --target wasm32-unknown-unknown --locked
 cargo test -p monaco-wasm
 wasm-pack build examples/wasm-basic --target web --out-dir pkg --no-pack
 # serve examples/wasm-basic/ (e.g. under /demo/) and open index.html
+(cd examples/yew-basic && trunk build --release --public-url /demo/)   # Trunk resolves the crate from the current directory
 ```
 
 Rebuilding the vendored runtime (maintainers only, needs Node):
@@ -67,9 +90,10 @@ Testing (needs Node, Chrome/Chromium, and for the core tests `wasm-bindgen-cli` 
 `Cargo.lock` plus a `chromedriver` matching the browser, via PATH or `CHROMEDRIVER`):
 
 ```sh
-cargo test -p monaco-wasm --target wasm32-unknown-unknown   # core API in headless Chrome
+cargo test -p monaco-wasm -p monaco-yew --target wasm32-unknown-unknown   # core API and Yew component in headless Chrome
 cd browser-tests && npm ci && cd ..                         # CHROMIUM=/usr/bin/chromium-browser for a system browser
 node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build above
+node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk build above
 tools/consumer-check.sh                                   # packaged consumer, Node stubbed out, with and without CSP
 ```
 
@@ -89,5 +113,6 @@ evaluation, so a clean build of `monaco-wasm` takes about 65 s (rustc 1.99.0, wa
 0.2.129). Incremental builds are unaffected. This is accepted for now (2026-10-21); alternatives
 (compressed workers, runtime evaluation, an upstream wasm-bindgen fix) are deferred.
 
-Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, esbuild 0.28.2, ts-gen 5341b86,
+Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
+esbuild 0.28.2, ts-gen 5341b86,
 TypeScript 5.9.3, Chromium.

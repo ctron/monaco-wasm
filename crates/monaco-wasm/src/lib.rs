@@ -26,4 +26,4 @@ pub mod sys;
 
 pub use editor::{ContentChange, Editor, EditorHandle, set_theme};
 pub use error::EditorError;
-pub use options::{EditorConfig, EditorOptions, LineNumbers, WordWrap};
+pub use options::{EditorConfig, EditorOptions, LineNumbers, WordWrap, validate_language};

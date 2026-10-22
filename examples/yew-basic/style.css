@@ -1,0 +1,4 @@
+body { font-family: system-ui, sans-serif; margin: 1rem; }
+#editor { border: 1px solid #ccc; }
+#controls { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+#output { white-space: pre-wrap; background: #f4f4f4; padding: 0.5rem; }

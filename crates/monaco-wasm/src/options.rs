@@ -67,7 +67,10 @@ impl Default for EditorOptions {
 }
 
 impl EditorOptions {
-    pub(crate) fn validate(&self) -> Result<(), EditorError> {
+    /// Checks the values that [`Editor::new`](crate::Editor::new) and
+    /// [`EditorHandle::update_options`](crate::EditorHandle::update_options)
+    /// would reject, without touching the editor.
+    pub fn validate(&self) -> Result<(), EditorError> {
         if !self.font_size.is_finite() || self.font_size <= 0.0 {
             return Err(EditorError::InvalidOptions(format!(
                 "font_size must be finite and positive, got {}",
@@ -83,7 +86,9 @@ impl EditorOptions {
     }
 }
 
-pub(crate) fn validate_language(language: &str) -> Result<(), EditorError> {
+/// Checks a language ID as [`EditorHandle::set_language`](crate::EditorHandle::set_language)
+/// would, without touching the editor.
+pub fn validate_language(language: &str) -> Result<(), EditorError> {
     if language.trim().is_empty() {
         return Err(EditorError::InvalidOptions(
             "language must not be blank".into(),

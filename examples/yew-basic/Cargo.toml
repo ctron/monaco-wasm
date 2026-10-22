@@ -1,0 +1,13 @@
+[package]
+name = "yew-basic"
+version = "0.0.0"
+edition.workspace = true
+publish = false
+
+[dependencies]
+monaco-yew.workspace = true
+web-sys = { workspace = true, features = ["console"] }
+yew = { version = "0.23", features = ["csr"] }
+
+[lints]
+workspace = true

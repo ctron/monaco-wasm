@@ -57,6 +57,10 @@ const server = createServer((request, response) => {
 await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
+// Trunk adds SRI hashes to its <link rel="preload"> tags; Chrome warns that
+// preloads ignore them (the actual script and wasm loads still check them).
+const BENIGN_WARNINGS = [/The `integrity` attribute is currently ignored for preload destinations/];
+
 const failures = [];
 function expect(condition, message) {
   console.log(`${condition ? "ok  " : "FAIL"} ${message}`);
@@ -71,6 +75,7 @@ try {
   const requests = [];
   page.on("console", (message) => {
     if (message.text().startsWith("change:")) changes.push(message.text());
+    if (BENIGN_WARNINGS.some((pattern) => pattern.test(message.text()))) return;
     if (message.type() === "error" || message.type() === "warning") {
       problems.push(`${message.type()}: ${message.text()}`);
     }
@@ -91,6 +96,14 @@ try {
       window.__cspViolations.push(`${event.effectiveDirective} blocked ${event.blockedURI || "inline"}`),
     );
   });
+  const output = async (expected) => {
+    await page
+      .waitForFunction((text) => document.querySelector("#output").textContent.includes(text), expected, {
+        timeout: 2000,
+      })
+      .catch(() => {});
+    return page.textContent("#output");
+  };
   const settle = () => page.evaluate(() => new Promise((done) => setTimeout(done, 50)));
 
   await page.goto(`${origin}${BASE}`);
@@ -123,42 +136,66 @@ try {
   expect(diagnostics, "invalid JSON produces diagnostics from the JSON worker");
 
   await page.click("#save");
-  expect((await page.textContent("#output")).endsWith("oops"), "Save returns typed text");
+  expect((await output("oops")).endsWith("oops"), "Save returns typed text");
 
   await settle();
   expect(changes.length > 0, `change events delivered (${changes.length})`);
 
   await page.click("#replace");
   await page.click("#save");
-  expect((await page.textContent("#output")).includes('"replaced": true'), "Replace document");
+  expect((await output('"replaced": true')).includes('"replaced": true'), "Replace document");
   await settle();
   expect(changes.at(-1)?.includes("is_flush: true"), "replacement reports is_flush");
 
   await page.click("#read-only");
-  expect((await page.textContent("#output")) === "read-only: true", "read-only toggle");
+  expect((await output("read-only: true")) === "read-only: true", "read-only toggle");
+  await page.click(".monaco-editor .view-lines");
+  await page.keyboard.type("Z");
+  await page.click("#save");
+  expect(!(await output("replaced")).includes("Z"), "read-only editor rejects typing");
   await page.click("#read-only");
+  await output("read-only: false");
 
-  const beforeDrop = changes.length;
-  await page.evaluate(() => {
-    window.demoApp.replaceDocument();
-    window.demoApp.unmount();
-  });
-  await settle();
-  expect(changes.length === beforeDrop, "event queued before disposal is dropped");
+  // Mounting goes through the page's Mount/Unmount button, so framework
+  // demos rerender as they would for a user.
+  const editorShown = (shown) =>
+    page.waitForFunction(
+      (shown) => (document.querySelector("#editor .monaco-editor") !== null) === shown,
+      shown,
+    );
+  const toggleMount = async (shown) => {
+    await page.click("#mount");
+    await editorShown(shown);
+  };
+
+  // Only the plain demo exposes its owner to JS, which allows unmounting in
+  // the same task as a change; the framework adapters test this directly.
+  const hasDemoApp = await page.evaluate(() => window.demoApp !== undefined);
+  if (hasDemoApp) {
+    const beforeDrop = changes.length;
+    await page.evaluate(() => {
+      window.demoApp.replaceDocument();
+      window.demoApp.unmount();
+    });
+    await settle();
+    expect(changes.length === beforeDrop, "event queued before disposal is dropped");
+    await page.evaluate(() => window.demoApp.mount());
+    await editorShown(true);
+  }
+
+  await toggleMount(false);
   expect(
-    await page.evaluate(() => document.getElementById("editor").children.length === 0),
-    "unmount empties the host",
+    await page.evaluate(() => document.querySelector("#editor .monaco-editor") === null),
+    "unmount removes the editor",
   );
   expect(JSON.stringify(await counts()) === "[0,0]", "unmount releases model and relay");
 
-  await page.evaluate(() => window.demoApp.mount());
+  await toggleMount(true);
   const baseline = await counts();
-  await page.evaluate(() => {
-    for (let i = 0; i < 100; i++) {
-      window.demoApp.unmount();
-      window.demoApp.mount();
-    }
-  });
+  for (let i = 0; i < 100; i++) {
+    await toggleMount(false);
+    await toggleMount(true);
+  }
   await settle();
   const after = await counts();
   expect(
