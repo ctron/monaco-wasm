@@ -4,8 +4,48 @@
 //! reach the application through `wasm-bindgen`'s JS snippet support. There is no npm install, CDN,
 //! or worker configuration.
 //!
-//! This is the framework-free core. For components, use
-//! [`monaco-yew`](https://docs.rs/monaco-yew) or [`monaco-leptos`](https://docs.rs/monaco-leptos).
+//! This is the framework-free core. Applications using a framework usually want one of its
+//! components instead.
+//!
+//! # Yew
+//!
+//! [`monaco-yew`](https://docs.rs/monaco-yew) provides a `MonacoEditor` component for
+//! [Yew](https://yew.rs):
+//!
+//! ```toml
+//! [dependencies]
+//! yew = { version = "0.23", features = ["csr"] }
+//! monaco-yew = "0.1"
+//! ```
+//!
+//! - [Component documentation](https://docs.rs/monaco-yew), with examples and its
+//!   [properties](https://docs.rs/monaco-yew/latest/monaco_yew/struct.MonacoEditorProps.html)
+//! - [Quickstart project](https://github.com/ctron/monaco-wasm/tree/main/examples/quickstart-yew)
+//!   and [live demo](https://ctron.github.io/monaco-wasm/yew/)
+//! - [Yew documentation](https://yew.rs/docs/getting-started/introduction)
+//!
+//! # Leptos
+//!
+//! [`monaco-leptos`](https://docs.rs/monaco-leptos) provides a `MonacoEditor` component for
+//! [Leptos](https://leptos.dev), with client-side rendering, server-side rendering, and hydration.
+//! Enable the same rendering mode (`csr`, `hydrate`, or `ssr`) as on Leptos:
+//!
+//! ```toml
+//! [dependencies]
+//! leptos = { version = "0.8", features = ["csr"] }
+//! monaco-leptos = { version = "0.1", features = ["csr"] }
+//! ```
+//!
+//! - [Component documentation](https://docs.rs/monaco-leptos), with examples and its
+//!   [properties](https://docs.rs/monaco-leptos/latest/monaco_leptos/fn.MonacoEditor.html)
+//! - [Server-side rendering and hydration](https://docs.rs/monaco-leptos/latest/monaco_leptos/#server-side-rendering-and-hydration)
+//! - [Quickstart project](https://github.com/ctron/monaco-wasm/tree/main/examples/quickstart-leptos)
+//!   and [live demo](https://ctron.github.io/monaco-wasm/leptos/)
+//! - [Leptos book](https://book.leptos.dev)
+//!
+//! Both components use the types of this crate ([`EditorHandle`], [`EditorOptions`],
+//! [`ContentChange`], [`EditorError`]) and re-export them, so the sections below apply to them as
+//! well.
 //!
 //! # Example
 //!
