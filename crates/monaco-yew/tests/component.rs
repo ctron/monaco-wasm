@@ -1,4 +1,4 @@
-//! Browser tests for the Yew component (DESIGN.md §7, §11).
+//! Browser tests for the Yew component.
 //!
 //!     cargo test -p monaco-yew --target wasm32-unknown-unknown
 

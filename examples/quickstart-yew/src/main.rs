@@ -287,6 +287,7 @@ fn app() -> Html {
                     {"Language "}
                     <select onchange={on_language}>
                         <option value="json" selected={*language == "json"}>{"JSON"}</option>
+                        <option value="yaml" selected={*language == "yaml"}>{"YAML"}</option>
                         <option value="plaintext" selected={*language == "plaintext"}>{"Plain text"}</option>
                     </select>
                 </label>

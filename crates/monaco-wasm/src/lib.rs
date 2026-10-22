@@ -46,7 +46,8 @@
 //! fields, so setting one back to its default resets it. Invalid values are rejected with
 //! [`EditorError::InvalidOptions`] before anything changes.
 //!
-//! The bundled runtime registers JSON (with validation in a worker) and plain text. [`set_theme`]
+//! The bundled runtime registers JSON (with validation in a worker), YAML (syntax highlighting,
+//! without validation), and plain text. [`set_theme`]
 //! switches the theme of every editor on the page; the built-in themes are `vs`, `vs-dark`,
 //! `hc-light`, and `hc-black`.
 //!

@@ -1,6 +1,7 @@
 // Monaco 0.57.0 editor runtime: core API, the standalone editor contributions,
-// and JSON language support. Paths were taken from the package's
-// esm/vs/internal/common/workers.js contribution list and verified by build.mjs.
+// JSON language support (with validation), and YAML syntax support. Paths
+// were taken from the package's esm/vs/internal/common/workers.js
+// contribution list and verified by build.mjs.
 // The package root entry is deliberately not used: it registers every language.
 import '../node_modules/monaco-editor/esm/vs/editor/browser/coreCommands.js';
 import '../node_modules/monaco-editor/esm/vs/editor/browser/widget/codeEditor/codeEditorWidget.js';
@@ -76,5 +77,6 @@ import '../node_modules/monaco-editor/esm/vs/editor/standalone/browser/quickAcce
 import '../node_modules/monaco-editor/esm/vs/editor/standalone/browser/referenceSearch/standaloneReferenceSearch.js';
 import '../node_modules/monaco-editor/esm/vs/editor/standalone/browser/toggleHighContrast/toggleHighContrast.js';
 import '../node_modules/monaco-editor/esm/vs/languages/features/json/register.js';
+import '../node_modules/monaco-editor/esm/vs/languages/definitions/yaml/register.js';
 
 export { editor, languages, Uri } from '../node_modules/monaco-editor/esm/vs/editor/editor.api.js';

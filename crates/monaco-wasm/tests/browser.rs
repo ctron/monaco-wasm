@@ -1,4 +1,4 @@
-//! Browser tests for the core API (DESIGN.md §11).
+//! Browser tests for the core API.
 //!
 //!     cargo test -p monaco-wasm --target wasm32-unknown-unknown
 //!
@@ -47,6 +47,9 @@ export function languageOf(editor) {
 }
 export function typeText(editor, text) {
   editor.trigger("test", "type", { text });
+}
+export function tokenTypes(api, text, language) {
+  return api.tokenize(text, language).flat().map((token) => token.type);
 }
 export function hostHasTheme(host, theme) {
   return host.querySelector(".monaco-editor")?.classList.contains(theme) ?? false;
@@ -111,6 +114,8 @@ extern "C" {
     fn language_of(editor: &sys::StandaloneCodeEditor) -> String;
     #[wasm_bindgen(js_name = typeText)]
     fn type_text(editor: &sys::StandaloneCodeEditor, text: &str);
+    #[wasm_bindgen(js_name = tokenTypes)]
+    fn token_types(api: &sys::EditorApi, text: &str, language: &str) -> Vec<String>;
     #[wasm_bindgen(js_name = hostHasTheme)]
     fn host_has_theme(host: &HtmlElement, theme: &str) -> bool;
     #[wasm_bindgen(js_name = failNextCreate)]
@@ -583,4 +588,26 @@ async fn failed_unsubscribe_still_disposes_and_detaches() {
     call_leaked(&leaked);
     tick().await;
     assert_eq!(calls.get(), 0);
+}
+
+#[wasm_bindgen_test]
+async fn yaml_is_highlighted() {
+    let host = Host::new();
+    let mut config = EditorConfig::default();
+    config.initial_value = "name: monaco # comment\n".into();
+    config.language = "yaml".into();
+    let editor = Editor::new(&host.0, config).unwrap();
+    // The language definition loads asynchronously on first use.
+    tick().await;
+
+    assert_eq!(language_of(&raw(&editor.handle())), "yaml");
+    let types = token_types(&api(), "name: monaco # comment", "yaml");
+    assert!(
+        types.iter().any(|t| t == "type.yaml"),
+        "key token: {types:?}"
+    );
+    assert!(
+        types.iter().any(|t| t == "comment.yaml"),
+        "comment token: {types:?}"
+    );
 }

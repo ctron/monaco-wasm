@@ -108,6 +108,8 @@ await shot(page, "dark");
 await page.check("text=Read-only");
 await page.click(".monaco-editor .view-lines"); const before = await value(page); await page.keyboard.type("ZZZ");
 check((await value(page)) === before, "read-only rejects typing");
+await page.selectOption("nav select >> nth=1", "yaml"); await page.waitForTimeout(300);
+check(await page.evaluate(() => document.querySelector(".squiggly-error") === null), "YAML has no JSON diagnostics");
 await page.selectOption("nav select >> nth=1", "plaintext"); await page.waitForTimeout(200);
 check(await page.evaluate(() => document.querySelector(".squiggly-error") === null), "plain text has no JSON diagnostics");
 

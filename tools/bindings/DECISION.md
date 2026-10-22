@@ -1,6 +1,6 @@
 # Binding generation decision
 
-Status: **accepted — ts-gen over a typed facade** (DESIGN.md §8, step 3). Decided 2026-10-21.
+Status: **accepted — ts-gen over a typed facade**. Decided 2026-10-21.
 
 ## Result
 

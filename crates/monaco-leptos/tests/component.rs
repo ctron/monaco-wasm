@@ -1,4 +1,4 @@
-//! Browser tests for the Leptos component (DESIGN.md §7, §11).
+//! Browser tests for the Leptos component.
 //!
 //!     cargo test -p monaco-leptos --target wasm32-unknown-unknown
 

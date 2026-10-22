@@ -89,14 +89,14 @@ See [`examples/wasm-basic`](examples/wasm-basic).
 | --- | --- |
 | Rust | 1.88 or newer |
 | Monaco | 0.57.0 (bundled) |
+| Languages | JSON (with validation), YAML, plain text |
 | Yew | 0.23 |
 | Leptos | 0.8 |
 | Browsers | Tested with Chromium |
 
 ## Development
 
-Building, testing, and the maintainer tooling are described in [DEVELOPMENT.md](DEVELOPMENT.md);
-the architecture and its decisions are in [DESIGN.md](DESIGN.md).
+Building, testing, and the maintainer tooling are described in [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## License
 

@@ -14,13 +14,13 @@
   "inputs": {
     "build.mjs": "350a09976f9807968e4e4a7f867f9d449fa9ef609d1568607b43397c12e9303d",
     "package-lock.json": "1bf7e0472931b053af34f79a846a16200ba34878656e8a1c54e8ef37efb31730",
-    "src/editor.js": "bf5806bd77b472ee5a032eb063c3967f9fddefaffe97c4a7489291a767a1313f",
+    "src/editor.js": "ca6970e10d8469eaa5a0a6542667e592cff2d530fc2bf0260377b5ec83703f4a",
     "src/bridge.js": "44dcf2265508afa1d2cbcef9f7c1142b4507f0f20217aa1eb121ecbeb87ce364"
   },
   "outputs": {
     "runtime.js": {
-      "sha256": "62d2ca7bd867f2b56c229fcbc7a4edfb41c901689e226051ceedd01caab4fd73",
-      "bytes": 5198306
+      "sha256": "bc12108d637ff488f33f09dc495f58f7db45e63105c983723af538406f4317bf",
+      "bytes": 5202745
     },
     "THIRD_PARTY_NOTICES": {
       "sha256": "af56f9c65858dfd4a87907cc0c6ddb699cd833be301317ad74538c1d8401f22f",
@@ -28,7 +28,7 @@
     }
   },
   "sizes": {
-    "editorJs": 4053720,
+    "editorJs": 4058159,
     "css": 379670,
     "editorWorker": 307235,
     "jsonWorker": 437295

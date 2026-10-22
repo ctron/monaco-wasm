@@ -34,5 +34,5 @@ web-sys = "0.3.77"
 
 [workspace.lints.clippy]
 # The option structs are #[non_exhaustive]; assigning fields after
-# Default::default() is the intended construction pattern (DESIGN.md §6).
+# Default::default() is the intended construction pattern.
 field_reassign_with_default = "allow"

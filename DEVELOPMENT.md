@@ -1,7 +1,7 @@
 # Development
 
 How to build, test, and release this repository. For using the crates, see the
-[README](README.md); for the architecture and its decisions, see [DESIGN.md](DESIGN.md).
+[README](README.md).
 
 ## Repository layout
 

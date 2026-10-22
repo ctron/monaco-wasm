@@ -258,6 +258,9 @@ fn App() -> impl IntoView {
                         <option value="json" selected=move || language.get() == "json">
                             "JSON"
                         </option>
+                        <option value="yaml" selected=move || language.get() == "yaml">
+                            "YAML"
+                        </option>
                         <option value="plaintext" selected=move || language.get() == "plaintext">
                             "Plain text"
                         </option>
