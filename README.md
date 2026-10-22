@@ -1,5 +1,9 @@
 # monaco-wasm
 
+[![CI](https://img.shields.io/github/actions/workflow/status/ctron/monaco-wasm/ci.yml?branch=main&label=CI)](https://github.com/ctron/monaco-wasm/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/monaco-wasm.svg)](https://crates.io/crates/monaco-wasm)
+[![docs.rs](https://img.shields.io/docsrs/monaco-wasm)](https://docs.rs/monaco-wasm)
+
 The [Monaco editor](https://microsoft.github.io/monaco-editor/) for Rust web applications, with
 components for [Yew](https://yew.rs) and [Leptos](https://leptos.dev). The editor runtime, its
 stylesheet, and the editor and JSON workers are bundled in the crate: add a Cargo dependency, with

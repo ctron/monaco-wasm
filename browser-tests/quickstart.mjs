@@ -75,6 +75,8 @@ const value = (page) => page.evaluate(() => [...document.querySelectorAll(".view
 const page = await open("light", { width: 1280, height: 800 });
 await shot(page, "light");
 check(await page.evaluate(() => document.querySelector(".monaco-editor").classList.contains("vs")), "light system theme -> vs");
+const docs = await page.locator("header a").getAttribute("href");
+check(/^https:\/\/docs\.rs\/monaco-(yew|leptos)$/.test(docs ?? ""), `header links to the documentation (${docs})`);
 const box = await page.locator("main .monaco-editor").boundingBox();
 check(box.height > 400, `editor fills the page (${Math.round(box.height)}px)`);
 

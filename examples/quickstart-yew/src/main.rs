@@ -268,7 +268,10 @@ fn app() -> Html {
         <div class={page_class}>
             <header>
                 <h1>{"monaco-yew"}</h1>
-                <p>{"The Monaco editor in a Yew app — built from Cargo dependencies only. No npm, no CDN."}</p>
+                <p>
+                    {"The Monaco editor in a Yew app — built from Cargo dependencies only. No npm, no CDN. "}
+                    <a href="https://docs.rs/monaco-yew">{"Documentation"}</a>
+                </p>
             </header>
 
             <nav class="toolbar" aria-label="Editor settings">

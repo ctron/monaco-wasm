@@ -41,6 +41,10 @@ header h1 {
   font-size: 1.4rem;
 }
 
+header a {
+  color: var(--accent);
+}
+
 header p {
   margin: 0.25rem 0 0;
   color: var(--muted);

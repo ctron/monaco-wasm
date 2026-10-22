@@ -228,7 +228,8 @@ fn App() -> impl IntoView {
             <header>
                 <h1>"monaco-leptos"</h1>
                 <p>
-                    "The Monaco editor in a Leptos app — built from Cargo dependencies only. No npm, no CDN."
+                    "The Monaco editor in a Leptos app — built from Cargo dependencies only. No npm, no CDN. "
+                    <a href="https://docs.rs/monaco-leptos">"Documentation"</a>
                 </p>
             </header>
 
