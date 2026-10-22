@@ -813,7 +813,7 @@ dependencies = [
 
 [[package]]
 name = "dioxus-basic"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "dioxus",
  "monaco-dioxus",
@@ -1110,7 +1110,7 @@ dependencies = [
 
 [[package]]
 name = "dioxus-hydrate"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "dioxus",
  "monaco-dioxus",
@@ -2457,7 +2457,7 @@ dependencies = [
 
 [[package]]
 name = "leptos-basic"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "leptos",
  "monaco-leptos",
@@ -2466,7 +2466,7 @@ dependencies = [
 
 [[package]]
 name = "leptos-hydrate"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "axum",
  "leptos",
@@ -2831,7 +2831,7 @@ dependencies = [
 
 [[package]]
 name = "monaco-dioxus"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "dioxus",
  "js-sys",
@@ -2844,7 +2844,7 @@ dependencies = [
 
 [[package]]
 name = "monaco-leptos"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "js-sys",
  "leptos",
@@ -2857,7 +2857,7 @@ dependencies = [
 
 [[package]]
 name = "monaco-wasm"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
@@ -2868,7 +2868,7 @@ dependencies = [
 
 [[package]]
 name = "monaco-yew"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "js-sys",
  "monaco-wasm",
@@ -3247,7 +3247,7 @@ dependencies = [
 
 [[package]]
 name = "quickstart-dioxus"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "dioxus",
  "js-sys",
@@ -3259,7 +3259,7 @@ dependencies = [
 
 [[package]]
 name = "quickstart-leptos"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "js-sys",
  "leptos",
@@ -3271,7 +3271,7 @@ dependencies = [
 
 [[package]]
 name = "quickstart-yew"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "js-sys",
  "monaco-yew",
@@ -4744,7 +4744,7 @@ dependencies = [
 
 [[package]]
 name = "wasm-basic"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "monaco-wasm",
  "wasm-bindgen",
@@ -5213,7 +5213,7 @@ dependencies = [
 
 [[package]]
 name = "yew-basic"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "monaco-yew",
  "web-sys",

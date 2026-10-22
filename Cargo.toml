@@ -17,7 +17,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 # Oldest Rust that builds every published crate; checked in CI.
 rust-version = "1.88"
@@ -28,10 +28,10 @@ homepage = "https://ctron.github.io/monaco-wasm/"
 [workspace.dependencies]
 # The workspace's own crates. Cargo requires the version to be repeated here
 # for publishing; keep it equal to workspace.package.version.
-monaco-dioxus = { path = "crates/monaco-dioxus", version = "0.1.1" }
-monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.1" }
-monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.1" }
-monaco-yew = { path = "crates/monaco-yew", version = "0.1.1" }
+monaco-dioxus = { path = "crates/monaco-dioxus", version = "0.1.2" }
+monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.2" }
+monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.2" }
+monaco-yew = { path = "crates/monaco-yew", version = "0.1.2" }
 
 # Frameworks without default features: members select the rendering mode.
 dioxus = { version = "0.7", default-features = false }
