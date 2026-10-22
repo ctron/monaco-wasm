@@ -10,6 +10,10 @@ on:
     tags: ["v*"]
 
 jobs:
+  # the full CI on the tagged commit, including the semver check of the bump
+  ci:
+    uses: ./.github/workflows/ci.yml
+
   # ensure that the version of the tag is the version of the crates
   ensure-version:
     runs-on: ubuntu-latest
@@ -34,7 +38,7 @@ jobs:
           fi
 
   publish:
-    needs: ensure-version
+    needs: [ci, ensure-version]
     runs-on: ubuntu-latest
     environment: release
     permissions:

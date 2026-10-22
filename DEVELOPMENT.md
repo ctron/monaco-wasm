@@ -114,9 +114,10 @@ All crates share one version: cargo-release bumps `[workspace.package]` and the 
 `[workspace.dependencies]`, commits, creates a single `v<version>` tag (for example `v0.2.0`),
 and pushes. It does not publish.
 
-The tag triggers `.github/workflows/release.yml`, which checks that the tag matches the version of
-every crate (setting the tag's version with `cargo-workspaces` must not change any file) and runs
-`cargo publish --workspace`: `monaco-wasm` first, then the components. It authenticates with
+The tag triggers `.github/workflows/release.yml`. It runs the full CI workflow on the tagged commit
+(including the semver check of the new version against the previous release), checks that the tag
+matches the version of every crate (setting the tag's version with `cargo-workspaces` must not
+change any file), and only when both pass runs `cargo publish --workspace`: `monaco-wasm` first, then the components. It authenticates with
 crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the three crates
 has a trusted publisher on crates.io for the repository `ctron/monaco-wasm`, the workflow
 `release.yml`, and the environment `release`, so no API token is stored.
