@@ -21,7 +21,7 @@
 //! renders its empty container and never touches browser APIs.
 
 use monaco_wasm::{Editor, EditorConfig, validate_language};
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, console};
 use yew::prelude::*;
 
 pub use monaco_wasm::{
@@ -77,7 +77,7 @@ pub struct MonacoEditor {
 fn report(props: &MonacoEditorProps, error: EditorError) {
     match &props.on_error {
         Some(on_error) => on_error.emit(error),
-        None => web_sys::console::error_2(&"monaco-yew:".into(), &error.to_string().into()),
+        None => console::error_2(&"monaco-yew:".into(), &error.to_string().into()),
     }
 }
 

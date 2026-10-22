@@ -5,12 +5,18 @@
 //! sample). Change notifications carry a version, not the text, so typing
 //! never copies the document into Yew state.
 
+use js_sys::Array;
 use monaco_yew::{
     ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, MonacoEditor, WordWrap,
     set_theme,
 };
+use serde_json::{Value, from_str, to_string_pretty};
 use wasm_bindgen::{JsCast, JsValue};
-use web_sys::{HtmlInputElement, HtmlSelectElement};
+use web_sys::{
+    Blob, BlobPropertyBag, HtmlAnchorElement, HtmlInputElement, HtmlSelectElement, Url, console,
+    window,
+};
+use yew::Renderer;
 use yew::prelude::*;
 
 const SAMPLE: &str = r#"{
@@ -77,7 +83,7 @@ impl Theme {
     }
 
     fn preferred() -> Theme {
-        let prefers_dark = web_sys::window()
+        let prefers_dark = window()
             .and_then(|window| {
                 window
                     .match_media("(prefers-color-scheme: dark)")
@@ -103,30 +109,26 @@ struct Status {
 
 /// Pretty-prints JSON, keeping key order.
 fn format_json(text: &str) -> Result<String, String> {
-    let value: serde_json::Value =
-        serde_json::from_str(text).map_err(|error| format!("Not valid JSON: {error}"))?;
-    let mut formatted = serde_json::to_string_pretty(&value).map_err(|error| error.to_string())?;
+    let value: Value = from_str(text).map_err(|error| format!("Not valid JSON: {error}"))?;
+    let mut formatted = to_string_pretty(&value).map_err(|error| error.to_string())?;
     formatted.push('\n');
     Ok(formatted)
 }
 
 /// Offers `text` as a file download.
 fn download(text: &str, file_name: &str) -> Result<(), JsValue> {
-    let document = web_sys::window()
+    let document = window()
         .and_then(|window| window.document())
         .ok_or("no document")?;
-    let options = web_sys::BlobPropertyBag::new();
+    let options = BlobPropertyBag::new();
     options.set_type("application/json");
-    let blob = web_sys::Blob::new_with_str_sequence_and_options(
-        &js_sys::Array::of1(&text.into()),
-        &options,
-    )?;
-    let url = web_sys::Url::create_object_url_with_blob(&blob)?;
-    let link: web_sys::HtmlAnchorElement = document.create_element("a")?.unchecked_into();
+    let blob = Blob::new_with_str_sequence_and_options(&Array::of1(&text.into()), &options)?;
+    let url = Url::create_object_url_with_blob(&blob)?;
+    let link: HtmlAnchorElement = document.create_element("a")?.unchecked_into();
     link.set_href(&url);
     link.set_download(file_name);
     link.click();
-    web_sys::Url::revoke_object_url(&url)
+    Url::revoke_object_url(&url)
 }
 
 #[function_component(App)]
@@ -141,7 +143,7 @@ fn app() -> Html {
     // The theme is global to Monaco; apply it whenever it changes.
     use_effect_with(*theme, |theme| {
         if let Err(error) = set_theme(theme.monaco_name()) {
-            web_sys::console::error_1(&error.to_string().into());
+            console::error_1(&error.to_string().into());
         }
     });
 
@@ -346,5 +348,5 @@ fn app() -> Html {
 }
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    Renderer::<App>::new().render();
 }

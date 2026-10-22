@@ -1,6 +1,8 @@
 //! Yew example: only Cargo dependencies, built with Trunk.
 
-use monaco_yew::{ContentChange, EditorHandle, EditorOptions, MonacoEditor};
+use monaco_yew::{ContentChange, EditorError, EditorHandle, EditorOptions, MonacoEditor};
+use web_sys::console;
+use yew::Renderer;
 use yew::prelude::*;
 
 const INITIAL: &str = "{\n  \"enabled\": true,\n  \"items\": [1, 2, 3]\n}\n";
@@ -19,9 +21,9 @@ fn app() -> Html {
         Callback::from(move |ready| *handle.borrow_mut() = Some(ready))
     };
     let on_change = Callback::from(|change: ContentChange| {
-        web_sys::console::log_1(&format!("change: {change:?}").into());
+        console::log_1(&format!("change: {change:?}").into());
     });
-    let run = |action: fn(&EditorHandle) -> Result<String, monaco_yew::EditorError>| {
+    let run = |action: fn(&EditorHandle) -> Result<String, EditorError>| {
         let (handle, output) = (handle.clone(), output.clone());
         Callback::from(move |_| match handle.borrow().as_ref() {
             Some(editor) => match action(editor) {
@@ -76,5 +78,5 @@ fn app() -> Html {
 }
 
 fn main() {
-    yew::Renderer::<App>::new().render();
+    Renderer::<App>::new().render();
 }

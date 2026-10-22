@@ -1,8 +1,8 @@
 //! Plain Rust/WASM example: no framework, exported to a static page.
 
-use monaco_wasm::{Editor, EditorConfig, EditorError, EditorHandle};
+use monaco_wasm::{Editor, EditorConfig, EditorError, EditorHandle, EditorOptions};
 use wasm_bindgen::prelude::*;
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, console};
 
 const INITIAL: &str = "{\n  \"enabled\": true,\n  \"items\": [1, 2, 3]\n}\n";
 const REPLACEMENT: &str = "{\n  \"replaced\": true\n}\n";
@@ -40,7 +40,7 @@ impl App {
         config.options.read_only = self.read_only;
         let mut editor = Editor::new(&self.host, config).map_err(js_error)?;
         editor.set_on_change(|change| {
-            web_sys::console::log_1(&format!("change: {change:?}").into());
+            console::log_1(&format!("change: {change:?}").into());
         });
         self.editor = Some(editor);
         Ok(())
@@ -72,7 +72,7 @@ impl App {
     pub fn toggle_read_only(&mut self) -> Result<bool, JsValue> {
         let read_only = !self.read_only;
         if let Some(editor) = &self.editor {
-            let mut options = monaco_wasm::EditorOptions::default();
+            let mut options = EditorOptions::default();
             options.read_only = read_only;
             editor.handle().update_options(&options).map_err(js_error)?;
         }

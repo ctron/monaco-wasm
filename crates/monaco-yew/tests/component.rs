@@ -13,8 +13,9 @@ use monaco_yew::{ContentChange, EditorError, EditorHandle, EditorOptions, Monaco
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
-use web_sys::{Element, HtmlElement};
+use web_sys::{Element, HtmlElement, window};
 use yew::prelude::*;
+use yew::{AppHandle, Renderer};
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -147,7 +148,7 @@ impl<T: Clone> Recorder<T> {
 
 struct Fixture {
     root: Element,
-    app: yew::AppHandle<Harness>,
+    app: AppHandle<Harness>,
     props: HarnessProps,
     ready: Recorder<EditorHandle>,
     changes: Recorder<ContentChange>,
@@ -156,7 +157,7 @@ struct Fixture {
 
 impl Fixture {
     async fn mount(initial_value: &str, language: &str) -> Self {
-        let document = web_sys::window().unwrap().document().unwrap();
+        let document = window().unwrap().document().unwrap();
         let root = document.create_element("div").unwrap();
         document.body().unwrap().append_child(&root).unwrap();
         let (ready, changes, errors) = (Recorder::new(), Recorder::new(), Recorder::new());
@@ -173,8 +174,7 @@ impl Fixture {
             on_change: Some(changes.callback()),
             on_error: Some(errors.callback()),
         };
-        let app =
-            yew::Renderer::<Harness>::with_root_and_props(root.clone(), props.clone()).render();
+        let app = Renderer::<Harness>::with_root_and_props(root.clone(), props.clone()).render();
         tick().await;
         Self {
             root,

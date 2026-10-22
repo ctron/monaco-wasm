@@ -10,15 +10,15 @@
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
-use js_sys::{Object, Promise};
+use js_sys::{Error as JsError, Object, Promise, Reflect};
 use monaco_wasm::{
     ContentChange, Editor, EditorConfig, EditorError, EditorHandle, EditorOptions, LineNumbers,
-    WordWrap, sys,
+    WordWrap, set_theme, sys,
 };
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, window};
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -133,7 +133,7 @@ struct Host(HtmlElement);
 
 impl Host {
     fn new() -> Self {
-        let document = web_sys::window().unwrap().document().unwrap();
+        let document = window().unwrap().document().unwrap();
         let host: HtmlElement = document.create_element("div").unwrap().unchecked_into();
         host.set_attribute("style", "width: 400px; height: 200px")
             .unwrap();
@@ -179,7 +179,7 @@ fn raw(handle: &EditorHandle) -> sys::StandaloneCodeEditor {
 }
 
 fn option(editor: &sys::StandaloneCodeEditor, name: &str) -> JsValue {
-    js_sys::Reflect::get(&raw_options(editor), &name.into()).unwrap()
+    Reflect::get(&raw_options(editor), &name.into()).unwrap()
 }
 
 #[wasm_bindgen_test]
@@ -505,7 +505,7 @@ async fn editors_are_isolated_and_theme_is_shared() {
 
     let third_host = Host::new();
     let third = Editor::new(&third_host.0, EditorConfig::default()).unwrap();
-    monaco_wasm::set_theme("vs-dark").unwrap();
+    set_theme("vs-dark").unwrap();
     assert!(host_has_theme(&second_host.0, "vs-dark"));
     assert!(host_has_theme(&third_host.0, "vs-dark"));
     let fourth_host = Host::new();
@@ -514,7 +514,7 @@ async fn editors_are_isolated_and_theme_is_shared() {
         host_has_theme(&fourth_host.0, "vs-dark"),
         "creation keeps the chosen theme"
     );
-    monaco_wasm::set_theme("vs").unwrap();
+    set_theme("vs").unwrap();
     drop(third);
 }
 
@@ -522,7 +522,7 @@ fn assert_js_error(error: EditorError, expected_operation: &str, expected_messag
     match error {
         EditorError::JavaScript { operation, cause } => {
             assert_eq!(operation, expected_operation);
-            let message = cause.unchecked_into::<js_sys::Error>().message();
+            let message = cause.unchecked_into::<JsError>().message();
             assert_eq!(
                 String::from(message),
                 expected_message,

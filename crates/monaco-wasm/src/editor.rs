@@ -2,7 +2,7 @@ use std::cell::{Cell, RefCell};
 use std::rc::{Rc, Weak};
 
 use wasm_bindgen::prelude::*;
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, console};
 
 use crate::options::validate_language;
 use crate::sys::{
@@ -213,7 +213,7 @@ impl Editor {
 impl Drop for Editor {
     fn drop(&mut self) {
         if let Err(error) = self.state.dispose() {
-            web_sys::console::error_2(
+            console::error_2(
                 &"monaco-wasm: editor cleanup failed:".into(),
                 &error.to_string().into(),
             );

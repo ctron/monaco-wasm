@@ -4,10 +4,11 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use monaco_wasm::{Editor, EditorConfig, EditorError};
+use js_sys::Error as JsError;
+use monaco_wasm::{Editor, EditorConfig, EditorError, set_theme};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_test::*;
-use web_sys::HtmlElement;
+use web_sys::{HtmlElement, window};
 
 wasm_bindgen_test_configure!(run_in_browser);
 
@@ -29,14 +30,14 @@ extern "C" {
 #[wasm_bindgen_test]
 fn foreign_monaco_environment_is_a_setup_error() {
     install_foreign_environment();
-    let document = web_sys::window().unwrap().document().unwrap();
+    let document = window().unwrap().document().unwrap();
     let host: HtmlElement = document.create_element("div").unwrap().unchecked_into();
     document.body().unwrap().append_child(&host).unwrap();
 
     match Editor::new(&host, EditorConfig::default()) {
         Err(EditorError::JavaScript { operation, cause }) => {
             assert_eq!(operation, "initialize runtime");
-            let message = String::from(cause.unchecked_into::<js_sys::Error>().message());
+            let message = String::from(cause.unchecked_into::<JsError>().message());
             assert!(message.contains("foreign MonacoEnvironment"), "{message}");
         }
         Err(other) => panic!("unexpected error {other:?}"),
@@ -46,9 +47,6 @@ fn foreign_monaco_environment_is_a_setup_error() {
         environment_is_foreign(),
         "foreign environment left untouched"
     );
-    assert!(
-        monaco_wasm::set_theme("vs").is_err(),
-        "runtime stays uninitialized"
-    );
+    assert!(set_theme("vs").is_err(), "runtime stays uninitialized");
     assert_eq!(host.child_element_count(), 0);
 }
