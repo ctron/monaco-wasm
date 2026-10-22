@@ -3,7 +3,7 @@ resolver = "3"
 members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "examples/leptos-basic", "examples/leptos-hydrate", "examples/quickstart-leptos", "examples/quickstart-yew", "examples/wasm-basic", "examples/yew-basic"]
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 # Oldest Rust that builds every published crate; checked in CI.
 rust-version = "1.88"
@@ -14,9 +14,9 @@ homepage = "https://ctron.github.io/monaco-wasm/"
 [workspace.dependencies]
 # The workspace's own crates. Cargo requires the version to be repeated here
 # for publishing; keep it equal to workspace.package.version.
-monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.0" }
-monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.0" }
-monaco-yew = { path = "crates/monaco-yew", version = "0.1.0" }
+monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.1" }
+monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.1" }
+monaco-yew = { path = "crates/monaco-yew", version = "0.1.1" }
 
 # Frameworks without default features: members select the rendering mode.
 leptos = { version = "0.8", default-features = false }
