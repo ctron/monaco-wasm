@@ -15,15 +15,15 @@ include = ["Cargo.toml", "README.md", "LICENSE", "src/**/*.rs"]
 [dependencies]
 monaco-wasm.workspace = true
 web-sys = { workspace = true, features = ["HtmlElement"] }
-yew = { version = "0.23", default-features = false }
+yew.workspace = true
 
 [dev-dependencies]
 js-sys.workspace = true
 wasm-bindgen.workspace = true
-wasm-bindgen-futures = "0.4.50"
-wasm-bindgen-test = "0.3.50"
+wasm-bindgen-futures.workspace = true
+wasm-bindgen-test.workspace = true
 web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
-yew = { version = "0.23", features = ["csr"] }
+yew = { workspace = true, features = ["csr"] }
 
 [lints]
 workspace = true

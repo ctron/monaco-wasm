@@ -17,7 +17,9 @@ How to build, test, and release this repository. For using the crates, see the
 | `browser-tests` | Playwright scripts for the demos and the site |
 
 The workspace manifest sets version, edition, rust-version, license, repository, and homepage once
-in `[workspace.package]`; every member inherits them.
+in `[workspace.package]`, and every dependency's version in `[workspace.dependencies]`. Members
+inherit them with `.workspace = true` and only add features or `optional`. Yew and Leptos are
+declared without default features there, so that each member selects its rendering mode.
 
 ## Building
 

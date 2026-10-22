@@ -13,16 +13,16 @@ categories = ["wasm", "web-programming", "text-editors", "gui"]
 include = ["Cargo.toml", "README.md", "LICENSE", "src/**/*.rs"]
 
 [dependencies]
-leptos = { version = "0.8", default-features = false }
+leptos.workspace = true
 monaco-wasm.workspace = true
 web-sys = { workspace = true, features = ["console"] }
 
 [dev-dependencies]
 js-sys.workspace = true
-leptos = { version = "0.8", features = ["csr"] }
+leptos = { workspace = true, features = ["csr"] }
 wasm-bindgen.workspace = true
-wasm-bindgen-futures = "0.4.50"
-wasm-bindgen-test = "0.3.50"
+wasm-bindgen-futures.workspace = true
+wasm-bindgen-test.workspace = true
 web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
 
 [features]

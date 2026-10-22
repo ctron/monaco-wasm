@@ -7,7 +7,7 @@ license.workspace = true
 publish = false
 
 [dependencies]
-leptos = { version = "0.8", features = ["csr"] }
+leptos = { workspace = true, features = ["csr"] }
 monaco-leptos = { workspace = true, features = ["csr"] }
 web-sys = { workspace = true, features = ["console"] }
 

@@ -10,11 +10,11 @@ publish = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-axum = { version = "0.8", optional = true }
-leptos = "0.8"
-leptos_axum = { version = "0.8", optional = true }
+axum = { workspace = true, optional = true }
+leptos.workspace = true
+leptos_axum = { workspace = true, optional = true }
 monaco-leptos.workspace = true
-tokio = { version = "1", features = ["macros", "rt-multi-thread"], optional = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"], optional = true }
 wasm-bindgen = { workspace = true, optional = true }
 
 [features]

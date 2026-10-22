@@ -21,11 +21,10 @@ GitHub Pages.
 ## Start your own project from it
 
 1. Copy this directory.
-2. In `Cargo.toml`, replace the `monaco-leptos` path dependency with
-   `monaco-leptos = { version = "0.1", features = ["csr"] }`.
-3. Replace the `*.workspace = true` package fields (version, edition, rust-version, license)
-   with your own values: outside this repository there is no workspace to inherit them from.
-4. Keep `index.html` (the Trunk entry point) and edit `src/main.rs`.
+2. In `Cargo.toml`, replace everything inherited from this repository's workspace
+   (`*.workspace = true`) with your own values: give the package a version, edition, and license,
+   and the dependencies their versions, for example `monaco-leptos = { version = "0.1", features = ["csr"] }`.
+3. Keep `index.html` (the Trunk entry point) and edit `src/main.rs`.
 
 The parts worth copying:
 

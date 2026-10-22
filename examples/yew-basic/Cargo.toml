@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 monaco-yew.workspace = true
 web-sys = { workspace = true, features = ["console"] }
-yew = { version = "0.23", features = ["csr"] }
+yew = { workspace = true, features = ["csr"] }
 
 [lints]
 workspace = true
