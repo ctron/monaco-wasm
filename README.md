@@ -5,6 +5,9 @@ Monaco editor for Rust/WASM, with a Yew component and a Leptos component planned
 
 Status: milestones 1–3 complete (package proof, core API, Yew). The Leptos adapter is next.
 
+Try it: [`examples/quickstart`](examples/quickstart) is a JSON playground built with the Yew
+component. `.github/workflows/pages.yml` publishes it to GitHub Pages.
+
 ## Using it
 
 ```toml
@@ -94,6 +97,7 @@ cargo test -p monaco-wasm -p monaco-yew --target wasm32-unknown-unknown   # core
 cd browser-tests && npm ci && cd ..                         # CHROMIUM=/usr/bin/chromium-browser for a system browser
 node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build above
 node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk build above
+node browser-tests/quickstart.mjs examples/quickstart/dist --base /monaco-yew/   # after trunk build --public-url /monaco-yew/
 tools/consumer-check.sh                                   # packaged consumer, Node stubbed out, with and without CSP
 ```
 

@@ -1,0 +1,25 @@
+[package]
+name = "quickstart"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+# In your own project: monaco-yew = "0.1"
+monaco-yew = { path = "../../crates/monaco-yew" }
+yew = { version = "0.23", features = ["csr"] }
+# Only for the playground's extras (formatting, download, theme detection).
+js-sys = "0.3.77"
+serde_json = { version = "1", features = ["preserve_order"] }
+wasm-bindgen = "0.2.100"
+web-sys = { version = "0.3.77", features = [
+    "Blob",
+    "BlobPropertyBag",
+    "Document",
+    "HtmlAnchorElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "MediaQueryList",
+    "Url",
+    "Window",
+] }
