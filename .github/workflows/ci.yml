@@ -26,6 +26,18 @@ jobs:
       - run: cargo package -p monaco-wasm --locked
       # The adapters are packaged after monaco-wasm is published; see tools/consumer-check.sh.
 
+  # Public API changes against the latest release on crates.io must match the
+  # version bump.
+  semver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # rust-toolchain.toml selects the compiler.
+      - run: rustup show
+      - uses: obi1kenobi/cargo-semver-checks-action@v2
+        with:
+          rust-toolchain: manual
+
   msrv:
     runs-on: ubuntu-latest
     steps:

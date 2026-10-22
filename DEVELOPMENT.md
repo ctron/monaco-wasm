@@ -91,7 +91,8 @@ node browser-tests/quickstart.mjs site/leptos --base /monaco-wasm/leptos/
 
 ## CI and GitHub Pages
 
-- `.github/workflows/ci.yml`: formatting, clippy (wasm, native, SSR), the minimum Rust version
+- `.github/workflows/ci.yml`: formatting, clippy (wasm, native, SSR), semver checks against the
+  latest crates.io release (cargo-semver-checks), the minimum Rust version
   with a freshly resolved lockfile, all browser tests, the demos, the hydration fixture, the
   packaged-consumer check, packaging, and the runtime and bindings checks.
 - `.github/workflows/pages.yml`: builds the site with `tools/build-pages.sh`, checks it, and
