@@ -8,19 +8,35 @@ on:
     tags: ["v*"]
 
 jobs:
+  # ensure that the version of the tag is the version of the crates
+  ensure-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Setup cargo-binstall
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      - name: Setup cargo-workspaces
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cargo binstall -y cargo-workspaces
+      - name: Set version
+        run: cargo ws version custom "${GITHUB_REF_NAME#v}" --all --no-git-commit --force "*" --yes
+      - name: Ensure this did not change anything
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Setting the version from the tag changed files: the tag $GITHUB_REF_NAME does not match the version of the crates."
+            exit 1
+          fi
+
   publish:
+    needs: ensure-version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - run: rustup show
-      - name: Check that the tag matches the version
-        run: |
-          version=$(cargo metadata --format-version 1 --no-deps --locked \
-            | jq -r '.packages[] | select(.name == "monaco-wasm") | .version')
-          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
-            echo "::error::tag $GITHUB_REF_NAME does not match version $version"
-            exit 1
-          fi
       - run: cargo publish --workspace --locked
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
