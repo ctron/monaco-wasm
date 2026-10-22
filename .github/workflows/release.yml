@@ -1,7 +1,8 @@
 name: Release
 
-# Publishes the crates when a version tag (v0.1.0, ...) is pushed. Needs a
-# crates.io API token in the CARGO_REGISTRY_TOKEN repository secret.
+# Publishes the crates when a version tag (v0.1.0, ...) is pushed, using
+# crates.io trusted publishing: each crate's trusted publisher on crates.io
+# must name this repository and the workflow file release.yml.
 
 on:
   push:
@@ -34,9 +35,16 @@ jobs:
   publish:
     needs: ensure-version
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Lets crates-io-auth-action exchange the job's OIDC token for a
+      # short-lived crates.io token.
+      id-token: write
     steps:
       - uses: actions/checkout@v7
       - run: rustup show
+      - uses: rust-lang/crates-io-auth-action@v1
+        id: auth
       - run: cargo publish --workspace --locked
         env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
