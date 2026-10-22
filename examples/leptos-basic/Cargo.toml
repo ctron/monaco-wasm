@@ -1,0 +1,13 @@
+[package]
+name = "leptos-basic"
+version = "0.0.0"
+edition.workspace = true
+publish = false
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+monaco-leptos = { workspace = true, features = ["csr"] }
+web-sys = { workspace = true, features = ["console"] }
+
+[lints]
+workspace = true

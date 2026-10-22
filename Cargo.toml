@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/monaco-wasm", "crates/monaco-yew", "examples/quickstart", "examples/wasm-basic", "examples/yew-basic"]
+members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "examples/leptos-basic", "examples/leptos-hydrate", "examples/quickstart", "examples/wasm-basic", "examples/yew-basic"]
 
 [workspace.package]
 version = "0.1.0"
@@ -9,6 +9,7 @@ license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
 monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.0" }
+monaco-leptos = { path = "crates/monaco-leptos", version = "0.1.0" }
 monaco-yew = { path = "crates/monaco-yew", version = "0.1.0" }
 js-sys = "0.3.77"
 wasm-bindgen = "0.2.100"

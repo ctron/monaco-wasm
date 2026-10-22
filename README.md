@@ -1,9 +1,9 @@
 # monaco-wasm
 
-Monaco editor for Rust/WASM, with a Yew component and a Leptos component planned. See
-[DESIGN.md](DESIGN.md).
+Monaco editor for Rust/WASM, with Yew and Leptos components. See [DESIGN.md](DESIGN.md).
 
-Status: milestones 1–3 complete (package proof, core API, Yew). The Leptos adapter is next.
+Status: milestones 1–4 complete (package proof, core API, Yew, Leptos). Release preparation is
+next.
 
 Try it: [`examples/quickstart`](examples/quickstart) is a JSON playground built with the Yew
 component. `.github/workflows/pages.yml` publishes it to GitHub Pages.
@@ -59,6 +59,28 @@ The component owns its text: `initial_value` is read once, and nothing is writte
 rerender. Use the `EditorHandle` from `on_ready` to read or replace the document, or remount with a
 new `key`. The container defaults to `height: 20rem; width: 100%`; a `style` prop is appended.
 
+Leptos (enable the same rendering mode on both crates: `csr`, `hydrate`, or `ssr`):
+
+```toml
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+monaco-leptos = { version = "0.1", features = ["csr"] }
+```
+
+```rust
+use leptos::prelude::*;
+use monaco_leptos::MonacoEditor;
+
+#[component]
+fn App() -> impl IntoView {
+    view! { <MonacoEditor language="json" initial_value="{}" /> }
+}
+```
+
+`language`, `options`, `class`, and `style` accept values or signals and update the existing
+editor. Under SSR the server renders an empty host; the editor is created in the browser after
+hydration, and the initial text is never rendered as HTML.
+
 ## Development
 
 ```sh
@@ -67,6 +89,7 @@ cargo test -p monaco-wasm
 wasm-pack build examples/wasm-basic --target web --out-dir pkg --no-pack
 # serve examples/wasm-basic/ (e.g. under /demo/) and open index.html
 (cd examples/yew-basic && trunk build --release --public-url /demo/)   # Trunk resolves the crate from the current directory
+(cd examples/leptos-basic && trunk build --release --public-url /demo/)
 ```
 
 Rebuilding the vendored runtime (maintainers only, needs Node):
@@ -93,10 +116,12 @@ Testing (needs Node, Chrome/Chromium, and for the core tests `wasm-bindgen-cli` 
 `Cargo.lock` plus a `chromedriver` matching the browser, via PATH or `CHROMEDRIVER`):
 
 ```sh
-cargo test -p monaco-wasm -p monaco-yew --target wasm32-unknown-unknown   # core API and Yew component in headless Chrome
+cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos --target wasm32-unknown-unknown   # core API and components in headless Chrome
 cd browser-tests && npm ci && cd ..                         # CHROMIUM=/usr/bin/chromium-browser for a system browser
 node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build above
-node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk build above
+node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk builds above
+node browser-tests/smoke.mjs examples/leptos-basic/dist
+tools/hydrate-check.sh --release                          # cargo-leptos SSR + hydration fixture (port 3400)
 node browser-tests/quickstart.mjs examples/quickstart/dist --base /monaco-yew/   # after trunk build --public-url /monaco-yew/
 tools/consumer-check.sh                                   # packaged consumer, Node stubbed out, with and without CSP
 ```
@@ -118,5 +143,6 @@ evaluation, so a clean build of `monaco-wasm` takes about 65 s (rustc 1.99.0, wa
 (compressed workers, runtime evaluation, an upstream wasm-bindgen fix) are deferred.
 
 Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
+Leptos 0.8.22, leptos_axum 0.8.10, cargo-leptos 0.3.7,
 esbuild 0.28.2, ts-gen 5341b86,
 TypeScript 5.9.3, Chromium.

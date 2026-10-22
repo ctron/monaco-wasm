@@ -1,0 +1,30 @@
+[package]
+name = "monaco-leptos"
+description = "Leptos component for the Monaco editor, with the editor runtime bundled"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+keywords = ["monaco", "editor", "leptos", "wasm"]
+categories = ["wasm", "web-programming", "text-editors", "gui"]
+
+[dependencies]
+leptos = { version = "0.8", default-features = false }
+monaco-wasm.workspace = true
+web-sys = { workspace = true, features = ["console"] }
+
+[dev-dependencies]
+js-sys.workspace = true
+leptos = { version = "0.8", features = ["csr"] }
+wasm-bindgen.workspace = true
+wasm-bindgen-futures = "0.4.50"
+wasm-bindgen-test = "0.3.50"
+web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
+
+[features]
+# No default rendering mode: applications enable exactly one, matching Leptos.
+csr = ["leptos/csr"]
+hydrate = ["leptos/hydrate"]
+ssr = ["leptos/ssr"]
+
+[lints]
+workspace = true
