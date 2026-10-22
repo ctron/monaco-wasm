@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # rust-toolchain.toml selects the compiler, components, and wasm target.
+      - run: rustup show
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets --target wasm32-unknown-unknown --locked -- -D warnings -A long_running_const_eval
+      - run: cargo clippy -p monaco-wasm --all-targets --locked -- -D warnings
+      - run: cargo test -p monaco-wasm --locked
+      - run: cargo package -p monaco-wasm --locked
+
+  runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: tools/runtime
+      - run: npm run runtime:check
+        working-directory: tools/runtime
+
+  bindings:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: Swatinem/rust-cache@v2
+      - run: npm ci
+        working-directory: tools/bindings
+      # Installs the ts-gen rev pinned in tools/bindings/package.json.
+      - run: npm run bindings:check
+        working-directory: tools/bindings

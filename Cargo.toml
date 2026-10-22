@@ -1,0 +1,19 @@
+[workspace]
+resolver = "3"
+members = ["crates/monaco-wasm", "examples/wasm-basic"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+
+[workspace.dependencies]
+monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.0" }
+js-sys = "0.3.77"
+wasm-bindgen = "0.2.100"
+web-sys = "0.3.77"
+
+[workspace.lints.clippy]
+# The option structs are #[non_exhaustive]; assigning fields after
+# Default::default() is the intended construction pattern (DESIGN.md §6).
+field_reassign_with_default = "allow"

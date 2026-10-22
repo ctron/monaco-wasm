@@ -1,0 +1,17 @@
+{
+  "tsGen": {
+    "repository": "https://github.com/wasm-bindgen/ts-gen",
+    "rev": "5341b86d1b749d1c3086fe8b3ec312409e448bfb",
+    "version": "ts-gen 0.1.0"
+  },
+  "command": "ts-gen --input fixtures/facade.d.ts --output ../../crates/monaco-wasm/src/sys/generated.rs --external HTMLElement=::web_sys::HtmlElement",
+  "monacoEditor": "0.57.0",
+  "typescript": "5.9.3",
+  "inputs": {
+    "fixtures/facade.d.ts": "5b32780143ac2519c8c69832a4f2f349df33a8d9a064590a6df68e09a195d0e0",
+    "fixtures/facade-check.ts": "641c7f5551807225ffe7db656f3a3f5e49ba6aaf2688c83c4aaa3c80bd74e218",
+    "tsconfig.json": "7a394fe69b219f9c295dde57cab593bf2ac1199ff5428e4da0bfc1902d403ada",
+    "node_modules/monaco-editor/monaco.d.ts": "83649ccc8dfd31800fc978e8cf44405f666b1fd729a9adfa54124dfdec557aa0"
+  },
+  "output": "b626217a7a9f18d114ec030f4c2a7d71f612f63f9232067fc0273cd7a421056f"
+}

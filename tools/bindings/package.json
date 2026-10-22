@@ -1,0 +1,18 @@
+{
+  "name": "monaco-wasm-bindings",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bindings:generate": "node generate.mjs",
+    "bindings:check": "node generate.mjs --check",
+    "bindings:update": "node generate.mjs --update"
+  },
+  "devDependencies": {
+    "monaco-editor": "0.57.0",
+    "typescript": "5.9.3"
+  },
+  "config": {
+    "tsGenRepository": "https://github.com/wasm-bindgen/ts-gen",
+    "tsGenRev": "5341b86d1b749d1c3086fe8b3ec312409e448bfb"
+  }
+}

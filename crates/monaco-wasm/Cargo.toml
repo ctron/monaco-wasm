@@ -1,0 +1,23 @@
+[package]
+name = "monaco-wasm"
+description = "Monaco editor for Rust/WASM, with the editor runtime and workers bundled"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+keywords = ["monaco", "editor", "wasm", "web"]
+categories = ["wasm", "web-programming", "text-editors"]
+include = [
+    "Cargo.toml",
+    "src/**/*.rs",
+    "js/runtime.js",
+    "js/runtime-manifest.json",
+    "js/THIRD_PARTY_NOTICES",
+]
+
+[dependencies]
+js-sys.workspace = true
+wasm-bindgen.workspace = true
+web-sys = { workspace = true, features = ["HtmlElement", "console"] }
+
+[lints]
+workspace = true

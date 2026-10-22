@@ -1,0 +1,13 @@
+{
+  "name": "monaco-wasm-runtime-build",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "runtime:build": "node build.mjs",
+    "runtime:check": "node build.mjs --check"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "monaco-editor": "0.57.0"
+  }
+}

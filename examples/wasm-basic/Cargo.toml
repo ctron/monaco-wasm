@@ -1,0 +1,16 @@
+[package]
+name = "wasm-basic"
+version = "0.0.0"
+edition.workspace = true
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+monaco-wasm.workspace = true
+wasm-bindgen.workspace = true
+web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window", "console"] }
+
+[lints]
+workspace = true
