@@ -16,12 +16,23 @@ The Monaco 0.57.0 runtime, stylesheet, and editor/JSON workers are bundled in th
 CDN, or worker configuration is needed. Deploy the whole build output directory, including the
 generated `snippets/`.
 
-Requirements for the page (expected from the runtime design; a production CSP has not been
-measured yet):
+Requirements for the page:
 
-- Content Security Policy must allow `worker-src blob:` and injected styles (`style-src 'unsafe-inline'`)
-  plus `data:` fonts (`font-src data:`).
-- No other `MonacoEnvironment` may be defined on the page.
+- Content Security Policy: monaco-wasm needs `worker-src blob:` (bundled workers),
+  `style-src 'unsafe-inline'` (Monaco injects its stylesheet and inline styles) and
+  `font-src data:` (the inlined icon font). Measured with Chromium; this policy works for the plain
+  example and is checked by `tools/consumer-check.sh`:
+
+  ```text
+  default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self';
+  worker-src blob:; style-src 'self' 'unsafe-inline'; font-src data:; img-src data:
+  ```
+
+  `script-src 'wasm-unsafe-eval'` and `connect-src 'self'` are needed by any wasm-bindgen
+  application; `img-src data:` only by the example's favicon. Policies without these mechanisms
+  are not supported yet.
+- No other `MonacoEnvironment` may be defined on the page; editor creation then fails with a setup
+  error instead of overwriting it.
 
 ## Development
 
@@ -52,12 +63,14 @@ npm run bindings:check
 npm run bindings:update     # move ts-gen to upstream main
 ```
 
-Testing (needs Node and a Chromium; set `CHROMIUM` or pass `--browser` to use a system browser):
+Testing (needs Node, Chrome/Chromium, and for the core tests `wasm-bindgen-cli` matching
+`Cargo.lock` plus a `chromedriver` matching the browser, via PATH or `CHROMEDRIVER`):
 
 ```sh
-cd browser-tests && npm ci && cd ..
-node browser-tests/smoke.mjs examples/wasm-basic        # after the wasm-pack build above
-tools/consumer-check.sh                                 # package, build a consumer with Node stubbed out, smoke-test it
+cargo test -p monaco-wasm --target wasm32-unknown-unknown   # core API in headless Chrome
+cd browser-tests && npm ci && cd ..                         # CHROMIUM=/usr/bin/chromium-browser for a system browser
+node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build above
+tools/consumer-check.sh                                   # packaged consumer, Node stubbed out, with and without CSP
 ```
 
 Node is needed only by maintainers (vendored runtime, bindings, tests). `tools/consumer-check.sh`

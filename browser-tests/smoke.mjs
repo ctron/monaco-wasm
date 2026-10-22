@@ -1,10 +1,12 @@
 // Smoke test for a built demo page (examples/wasm-basic layout).
 //
-//   node smoke.mjs <directory containing index.html and pkg/> [--browser /path/to/chromium]
+//   node smoke.mjs <directory containing index.html and pkg/> [--browser /path/to/chromium] [--csp "<policy>"]
 //
 // Serves the directory under /demo/ on a local port, so relative asset paths
 // are exercised, then checks editing, JSON diagnostics, change events,
-// disposal, and that no request leaves the origin. Exits non-zero on failure.
+// disposal, and that no request leaves the origin. With --csp, every response
+// carries that Content-Security-Policy and any violation fails the run.
+// Exits non-zero on failure.
 
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer } from "node:http";
@@ -14,6 +16,8 @@ import { chromium } from "playwright-core";
 const args = process.argv.slice(2);
 const browserFlag = args.indexOf("--browser");
 const executablePath = browserFlag >= 0 ? args.splice(browserFlag, 2)[1] : process.env.CHROMIUM;
+const cspFlag = args.indexOf("--csp");
+const csp = cspFlag >= 0 ? args.splice(cspFlag, 2)[1] : undefined;
 const root = resolve(args[0] ?? "");
 if (!args[0] || !existsSync(join(root, "index.html"))) {
   console.error("usage: node smoke.mjs <demo directory> [--browser <chromium>]");
@@ -25,6 +29,7 @@ const TYPES = {
   ".js": "text/javascript",
   ".wasm": "application/wasm",
   ".json": "application/json",
+  ".css": "text/css",
 };
 const BASE = "/demo/";
 
@@ -44,7 +49,9 @@ const server = createServer((request, response) => {
     response.writeHead(404).end();
     return;
   }
-  response.writeHead(200, { "content-type": TYPES[extname(path)] ?? "application/octet-stream" });
+  const headers = { "content-type": TYPES[extname(path)] ?? "application/octet-stream" };
+  if (csp) headers["content-security-policy"] = csp;
+  response.writeHead(200, headers);
   createReadStream(path).pipe(response);
 });
 await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
@@ -78,6 +85,12 @@ try {
       if (message.type() === "error") problems.push(`worker: ${message.text()}`);
     }),
   );
+  await page.addInitScript(() => {
+    window.__cspViolations = [];
+    document.addEventListener("securitypolicyviolation", (event) =>
+      window.__cspViolations.push(`${event.effectiveDirective} blocked ${event.blockedURI || "inline"}`),
+    );
+  });
   const settle = () => page.evaluate(() => new Promise((done) => setTimeout(done, 50)));
 
   await page.goto(`${origin}${BASE}`);
@@ -157,6 +170,10 @@ try {
     (url) => !url.startsWith(origin) && !url.startsWith("blob:") && !url.startsWith("data:"),
   );
   expect(external.length === 0, `no external requests (${requests.length} total)`);
+  if (csp) {
+    const violations = await page.evaluate(() => window.__cspViolations);
+    expect(violations.length === 0, `no CSP violations${violations.length ? `: ${[...new Set(violations)].join("; ")}` : ""}`);
+  }
   expect(problems.length === 0, `no console errors or warnings${problems.length ? `: ${problems.join("; ")}` : ""}`);
 } finally {
   await browser.close();

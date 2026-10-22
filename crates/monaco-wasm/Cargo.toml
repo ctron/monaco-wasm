@@ -19,5 +19,10 @@ js-sys.workspace = true
 wasm-bindgen.workspace = true
 web-sys = { workspace = true, features = ["HtmlElement", "console"] }
 
+[dev-dependencies]
+wasm-bindgen-futures = "0.4.50"
+wasm-bindgen-test = "0.3.50"
+web-sys = { workspace = true, features = ["Document", "Element", "HtmlElement", "Window"] }
+
 [lints]
 workspace = true

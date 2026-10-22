@@ -19,6 +19,28 @@ jobs:
       - run: cargo test -p monaco-wasm --locked
       - run: cargo package -p monaco-wasm --locked
 
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup show
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install wasm-bindgen-cli matching Cargo.lock, and wasm-pack
+        run: |
+          version=$(cargo metadata --format-version 1 --locked | jq -r '.packages[] | select(.name == "wasm-bindgen") | .version')
+          cargo install wasm-bindgen-cli --version "$version" --locked
+          cargo install wasm-pack --locked
+      # The runner image provides Chrome and a matching chromedriver.
+      - name: Core API browser tests
+        run: CHROMEDRIVER="$CHROMEWEBDRIVER/chromedriver" cargo test -p monaco-wasm --target wasm32-unknown-unknown --locked
+      - name: Packaged consumer without Node, with and without CSP
+        run: |
+          (cd browser-tests && npm ci)
+          CHROMIUM="$(command -v google-chrome)" tools/consumer-check.sh
+
   runtime:
     runs-on: ubuntu-latest
     steps:

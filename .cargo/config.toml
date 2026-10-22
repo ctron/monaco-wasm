@@ -1,0 +1,5 @@
+# `cargo test --target wasm32-unknown-unknown` runs browser tests through
+# wasm-bindgen-test-runner (install wasm-bindgen-cli matching Cargo.lock and
+# put a chromedriver matching the installed Chrome on PATH, or set CHROMEDRIVER).
+[target.wasm32-unknown-unknown]
+runner = "wasm-bindgen-test-runner"

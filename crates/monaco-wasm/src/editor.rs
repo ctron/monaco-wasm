@@ -83,9 +83,10 @@ impl State {
                 .map_err(EditorError::js("dispose model")),
         );
 
-        // This may run from inside the relay closure, which must not be
-        // dropped while executing. The relay is already detached, so a
-        // microtask later nothing can call it.
+        // This may run from inside the relay closure. wasm-bindgen 0.2.129
+        // reference-counts owned closures across calls, but the dependency
+        // range admits older releases, so release it a microtask later. The
+        // relay is already detached, so nothing can call it meanwhile.
         let closure = self.relay_closure.borrow_mut().take();
         if let Some(closure) = closure {
             let release = Closure::once_into_js(move || drop(closure));

@@ -25,7 +25,7 @@ mkdir -p "$work/vendor" "$work/app/src" "$work/stubs"
 tar -xzf "$crate" -C "$work/vendor"
 crate_dir=$(ls -d "$work"/vendor/monaco-wasm-*)
 cp examples/wasm-basic/src/lib.rs "$work/app/src/"
-cp examples/wasm-basic/index.html "$work/app/"
+cp examples/wasm-basic/index.html examples/wasm-basic/main.js examples/wasm-basic/style.css "$work/app/"
 cat > "$work/app/Cargo.toml" <<EOF
 [package]
 name = "wasm-basic"
@@ -68,3 +68,7 @@ echo "consumer build did not invoke Node"
 cd "$repo/browser-tests"
 [ -d node_modules ] || npm ci
 "$real_node" smoke.mjs "$work/app" "$@"
+
+# Again under the strictest policy the documented deployment needs (README).
+echo "smoke test under the documented Content-Security-Policy:"
+"$real_node" smoke.mjs "$work/app" --csp "default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; worker-src blob:; style-src 'self' 'unsafe-inline'; font-src data:; img-src data:" "$@"
