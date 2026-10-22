@@ -1,6 +1,5 @@
-use std::fmt;
-
 use js_sys::Error as JsError;
+use std::fmt;
 use wasm_bindgen::{JsCast, JsValue};
 
 #[derive(Clone, Debug)]

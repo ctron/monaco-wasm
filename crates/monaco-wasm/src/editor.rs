@@ -1,15 +1,13 @@
-use std::cell::{Cell, RefCell};
-use std::rc::{Rc, Weak};
-
-use wasm_bindgen::prelude::*;
-use web_sys::{HtmlElement, console};
-
 use crate::options::validate_language;
 use crate::sys::{
     self, ChangeRelay, Disposable, EditorApi, EditorUpdateOptions, MinimapOptions,
     StandaloneCodeEditor, StandaloneEditorConstructionOptions, TextModel,
 };
 use crate::{EditorConfig, EditorError, EditorOptions};
+use std::cell::{Cell, RefCell};
+use std::rc::{Rc, Weak};
+use wasm_bindgen::prelude::*;
+use web_sys::{HtmlElement, console};
 
 /// A content change notification, delivered from a microtask after Monaco
 /// applied the change.

@@ -1,10 +1,9 @@
 //! Handwritten imports of the bundled bridge module, which is ours rather
 //! than Monaco's and has no upstream declarations.
 
+use super::{Disposable, EditorApi, TextModel};
 use js_sys::Function;
 use wasm_bindgen::prelude::*;
-
-use super::{Disposable, EditorApi, TextModel};
 
 #[wasm_bindgen(module = "/js/runtime.js")]
 extern "C" {

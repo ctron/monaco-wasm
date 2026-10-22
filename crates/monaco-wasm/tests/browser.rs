@@ -7,14 +7,13 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use std::cell::{Cell, RefCell};
-use std::rc::Rc;
-
 use js_sys::{Error as JsError, Object, Promise, Reflect};
 use monaco_wasm::{
     ContentChange, Editor, EditorConfig, EditorError, EditorHandle, EditorOptions, LineNumbers,
     WordWrap, set_theme, sys,
 };
+use std::cell::{Cell, RefCell};
+use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;

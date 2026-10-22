@@ -4,12 +4,11 @@
 
 #![cfg(target_arch = "wasm32")]
 
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use js_sys::{Object, Promise};
 use monaco_yew::monaco_wasm::sys;
 use monaco_yew::{ContentChange, EditorError, EditorHandle, EditorOptions, MonacoEditor, WordWrap};
+use std::cell::RefCell;
+use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;

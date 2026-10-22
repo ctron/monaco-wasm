@@ -20,13 +20,12 @@
 //! Supports client-side rendering. Under server-side rendering the component
 //! renders its empty container and never touches browser APIs.
 
-use monaco_wasm::{Editor, EditorConfig, validate_language};
-use web_sys::{HtmlElement, console};
-use yew::prelude::*;
-
 pub use monaco_wasm::{
     self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, WordWrap, set_theme,
 };
+use monaco_wasm::{Editor, EditorConfig, validate_language};
+use web_sys::{HtmlElement, console};
+use yew::prelude::*;
 
 /// Default container style; a `style` prop is appended and can override it.
 const CONTAINER_STYLE: &str = "height: 20rem; width: 100%; min-width: 0;";

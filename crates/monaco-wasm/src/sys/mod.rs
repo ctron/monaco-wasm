@@ -17,7 +17,6 @@ mod manual;
 pub use generated::*;
 pub(crate) use manual::queue_microtask;
 pub use manual::{ChangeRelay, active_relay_count};
-
 use wasm_bindgen::JsValue;
 
 /// Returns the `monaco.editor` API, initializing the bundled runtime on
