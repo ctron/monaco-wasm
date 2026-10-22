@@ -1,7 +1,7 @@
 // Checks a quickstart playground (examples/quickstart-yew or
 // examples/quickstart-leptos) as deployed.
 //
-//   node quickstart.mjs <dist directory> [--base /monaco-yew/] [--screenshots <dir>]
+//   node quickstart.mjs <dist directory> [--base /monaco-wasm/] [--screenshots <dir>]
 //
 // Serves the Trunk output under --base (the GitHub Pages path), then drives
 // the page like a user: diagnostics, Format, Load sample, Download, themes,
@@ -18,7 +18,7 @@ const option = (name, fallback) => {
   const index = args.indexOf(name);
   return index >= 0 ? args.splice(index, 2)[1] : fallback;
 };
-const basePath = option("--base", "/monaco-yew/");
+const basePath = option("--base", "/monaco-wasm/");
 const screenshots = option("--screenshots", undefined);
 const root = resolve(args[0] ?? "");
 if (!args[0] || !existsSync(join(root, "index.html"))) {

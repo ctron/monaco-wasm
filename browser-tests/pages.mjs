@@ -1,6 +1,6 @@
 // Checks the assembled GitHub Pages site (tools/build-pages.sh output).
 //
-//   node pages.mjs <site directory> [--base /monaco-yew/] [--screenshots <dir>]
+//   node pages.mjs <site directory> [--base /monaco-wasm/] [--screenshots <dir>]
 //
 // Serves the site under --base, checks the landing page in light, dark, and
 // phone-sized layouts, and follows the links to both quickstarts. The
@@ -17,7 +17,7 @@ const option = (name, fallback) => {
   const index = args.indexOf(name);
   return index >= 0 ? args.splice(index, 2)[1] : fallback;
 };
-const basePath = option("--base", "/monaco-yew/");
+const basePath = option("--base", "/monaco-wasm/");
 const screenshots = option("--screenshots", undefined);
 const root = resolve(args[0] ?? "");
 if (!args[0] || !existsSync(join(root, "index.html"))) {
