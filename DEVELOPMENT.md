@@ -118,6 +118,9 @@ crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each 
 has a trusted publisher on crates.io for the repository `ctron/monaco-wasm`, the workflow
 `release.yml`, and the environment `release`, so no API token is stored.
 
+The `release` environment only accepts `v*` tags and requires a reviewer's approval: the publish
+job waits in the Actions UI ("Review deployments") until it is approved.
+
 ## Minimum supported Rust
 
 1.88, set as `rust-version` in the workspace manifest. `monaco-wasm` alone builds from 1.85; the
