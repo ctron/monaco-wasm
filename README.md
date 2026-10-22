@@ -147,7 +147,15 @@ evaluation, so a clean build of `monaco-wasm` takes about 65 s (rustc 1.99.0, wa
 0.2.129). Incremental builds are unaffected. This is accepted for now (2026-10-21); alternatives
 (compressed workers, runtime evaluation, an upstream wasm-bindgen fix) are deferred.
 
+Minimum supported Rust: 1.88 (`rust-version` in the workspace manifest, checked in CI). Version,
+edition, rust-version, and license are set once in `[workspace.package]`.
+
 Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
 Leptos 0.8.22, leptos_axum 0.8.10, cargo-leptos 0.3.7,
 esbuild 0.28.2, ts-gen 5341b86,
 TypeScript 5.9.3, Chromium.
+
+## License
+
+Apache-2.0, see [LICENSE](LICENSE). The bundled Monaco runtime is MIT licensed; see
+`crates/monaco-wasm/js/THIRD_PARTY_NOTICES`.

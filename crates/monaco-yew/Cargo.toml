@@ -1,11 +1,16 @@
 [package]
 name = "monaco-yew"
-description = "Yew component for the Monaco editor, with the editor runtime bundled"
+description = "Yew component for the Monaco editor, with the editor runtime and workers bundled"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-keywords = ["monaco", "editor", "yew", "wasm"]
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+rust-version.workspace = true
+keywords = ["monaco", "editor", "yew", "wasm", "code-editor"]
 categories = ["wasm", "web-programming", "text-editors", "gui"]
+include = ["Cargo.toml", "README.md", "LICENSE", "src/**/*.rs"]
 
 [dependencies]
 monaco-wasm.workspace = true

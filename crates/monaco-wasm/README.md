@@ -1,0 +1,46 @@
+# monaco-wasm
+
+The [Monaco editor](https://microsoft.github.io/monaco-editor/) for Rust/WASM applications, with
+the editor runtime, its stylesheet, and the editor and JSON workers bundled in the crate. Add a
+Cargo dependency: there is no npm install, CDN, or worker configuration.
+
+This is the framework-free core. For components, see
+[`monaco-yew`](https://crates.io/crates/monaco-yew) and
+[`monaco-leptos`](https://crates.io/crates/monaco-leptos).
+[Live demos](https://ctron.github.io/monaco-wasm/).
+
+```toml
+[dependencies]
+monaco-wasm = "0.1"
+```
+
+```rust
+use monaco_wasm::{Editor, EditorConfig, EditorError};
+use web_sys::HtmlElement;
+
+fn mount_editor(host: &HtmlElement) -> Result<Editor, EditorError> {
+    let mut config = EditorConfig::default();
+    config.initial_value = "{\n  \"enabled\": true\n}".into();
+    config.language = "json".into();
+    Editor::new(host, config)
+}
+// Keep the returned Editor alive; dropping it disposes the editor.
+```
+
+- `Editor` owns the editor and its model; `EditorHandle` is a cloneable weak reference for reading
+  or replacing the text, updating options, and focusing.
+- Change notifications are delivered asynchronously and carry a version, not the document.
+- `sys` exposes the low-level bindings for anything the safe API does not cover.
+
+## Deployment
+
+The runtime reaches your build as a `wasm-bindgen` JS snippet; deploy the whole output directory
+of Trunk, wasm-pack, or cargo-leptos, including `snippets/`. The bundled runtime is Monaco 0.57.0
+with JSON and plain-text support (about 1.4 MiB gzipped).
+
+With a Content Security Policy, the editor needs `worker-src blob:`, `style-src 'unsafe-inline'`,
+and `font-src data:`. A page that already defines its own `MonacoEnvironment` gets a setup error.
+
+## License
+
+Apache-2.0. The bundled Monaco runtime is MIT licensed; see `js/THIRD_PARTY_NOTICES`.

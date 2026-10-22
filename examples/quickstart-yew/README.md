@@ -22,7 +22,9 @@ GitHub Pages.
 
 1. Copy this directory.
 2. In `Cargo.toml`, replace the `monaco-yew` path dependency with `monaco-yew = "0.1"`.
-3. Keep `index.html` (the Trunk entry point) and edit `src/main.rs`.
+3. Replace the `*.workspace = true` package fields (version, edition, rust-version, license)
+   with your own values: outside this repository there is no workspace to inherit them from.
+4. Keep `index.html` (the Trunk entry point) and edit `src/main.rs`.
 
 The parts worth copying:
 

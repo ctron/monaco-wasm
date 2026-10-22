@@ -22,6 +22,20 @@ jobs:
       - run: cargo package -p monaco-wasm --locked
       # The adapters are packaged after monaco-wasm is published; see tools/consumer-check.sh.
 
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install the minimum supported Rust (workspace.package.rust-version)
+        run: |
+          msrv=$(sed -n 's/^rust-version = "\(.*\)"/\1/p' Cargo.toml)
+          echo "MSRV=$msrv" >> "$GITHUB_ENV"
+          rustup toolchain install "$msrv" --profile minimal
+      # Resolve as a consumer on that Rust would: Cargo picks dependency
+      # versions compatible with rust-version.
+      - run: cargo generate-lockfile
+      - run: cargo +"$MSRV" check -p monaco-wasm -p monaco-yew -p monaco-leptos --lib
+
   browser:
     runs-on: ubuntu-latest
     steps:

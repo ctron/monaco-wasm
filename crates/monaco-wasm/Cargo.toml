@@ -1,13 +1,19 @@
 [package]
 name = "monaco-wasm"
-description = "Monaco editor for Rust/WASM, with the editor runtime and workers bundled"
+description = "The Monaco editor for Rust/WASM, with the editor runtime and workers bundled: no npm, no CDN"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-keywords = ["monaco", "editor", "wasm", "web"]
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+rust-version.workspace = true
+keywords = ["monaco", "editor", "wasm", "web", "code-editor"]
 categories = ["wasm", "web-programming", "text-editors"]
 include = [
     "Cargo.toml",
+    "README.md",
+    "LICENSE",
     "src/**/*.rs",
     "js/runtime.js",
     "js/runtime-manifest.json",

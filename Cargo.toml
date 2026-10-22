@@ -5,7 +5,11 @@ members = ["crates/monaco-leptos", "crates/monaco-wasm", "crates/monaco-yew", "e
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-license = "MIT OR Apache-2.0"
+# Oldest Rust that builds every published crate; checked in CI.
+rust-version = "1.88"
+license = "Apache-2.0"
+repository = "https://github.com/ctron/monaco-wasm"
+homepage = "https://ctron.github.io/monaco-wasm/"
 
 [workspace.dependencies]
 monaco-wasm = { path = "crates/monaco-wasm", version = "0.1.0" }

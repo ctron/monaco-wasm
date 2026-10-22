@@ -1195,7 +1195,7 @@ dependencies = [
 
 [[package]]
 name = "leptos-basic"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "leptos",
  "monaco-leptos",
@@ -1204,7 +1204,7 @@ dependencies = [
 
 [[package]]
 name = "leptos-hydrate"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "axum",
  "leptos",
@@ -1778,7 +1778,7 @@ dependencies = [
 
 [[package]]
 name = "quickstart-leptos"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "js-sys",
  "leptos",
@@ -1790,7 +1790,7 @@ dependencies = [
 
 [[package]]
 name = "quickstart-yew"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "js-sys",
  "monaco-yew",
@@ -2754,7 +2754,7 @@ dependencies = [
 
 [[package]]
 name = "wasm-basic"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "monaco-wasm",
  "wasm-bindgen",
@@ -2988,7 +2988,7 @@ dependencies = [
 
 [[package]]
 name = "yew-basic"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "monaco-yew",
  "web-sys",
