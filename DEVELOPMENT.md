@@ -98,9 +98,12 @@ node browser-tests/quickstart.mjs site/leptos --base /monaco-wasm/leptos/
 ## Releasing
 
 1. Bump `version` in `[workspace.package]` and the internal entries in `[workspace.dependencies]`
-   (Cargo requires them to repeat the version).
-2. Make sure CI is green, then `cargo publish --workspace --dry-run`.
-3. `cargo publish --workspace` publishes `monaco-wasm` first, then the components.
+   (Cargo requires them to repeat the version). Commit and wait for CI to pass.
+2. Tag the commit with `v` and the version, for example `v0.2.0`, and push the tag.
+
+`.github/workflows/release.yml` then checks that the tag matches the version and runs
+`cargo publish --workspace`, which publishes `monaco-wasm` first, then the components. It needs a
+crates.io API token in the `CARGO_REGISTRY_TOKEN` repository secret.
 
 ## Minimum supported Rust
 
