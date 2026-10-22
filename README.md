@@ -5,10 +5,6 @@ components for [Yew](https://yew.rs) and [Leptos](https://leptos.dev). The edito
 stylesheet, and the editor and JSON workers are bundled in the crate: add a Cargo dependency, with
 no npm install, CDN, or worker configuration.
 
-**[Live demos](https://ctron.github.io/monaco-wasm/)**:
-[Yew](https://ctron.github.io/monaco-wasm/yew/) ·
-[Leptos](https://ctron.github.io/monaco-wasm/leptos/)
-
 | Crate | Use it for |
 | --- | --- |
 | [`monaco-yew`](crates/monaco-yew) | A `MonacoEditor` component for Yew 0.23 |
