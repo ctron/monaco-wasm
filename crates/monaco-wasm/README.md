@@ -27,19 +27,8 @@ fn mount_editor(host: &HtmlElement) -> Result<Editor, EditorError> {
 // Keep the returned Editor alive; dropping it disposes the editor.
 ```
 
-- `Editor` owns the editor and its model; `EditorHandle` is a cloneable weak reference for reading
-  or replacing the text, updating options, and focusing.
-- Change notifications are delivered asynchronously and carry a version, not the document.
-- `sys` exposes the low-level bindings for anything the safe API does not cover.
-
-## Deployment
-
-The runtime reaches your build as a `wasm-bindgen` JS snippet; deploy the whole output directory
-of Trunk, wasm-pack, or cargo-leptos, including `snippets/`. The bundled runtime is Monaco 0.57.0
-with JSON and plain-text support (about 1.4 MiB gzipped).
-
-With a Content Security Policy, the editor needs `worker-src blob:`, `style-src 'unsafe-inline'`,
-and `font-src data:`. A page that already defines its own `MonacoEnvironment` gets a setup error.
+The [documentation](https://docs.rs/monaco-wasm) covers ownership and handles, change
+notifications, editor options and themes, deployment, and Content Security Policy requirements.
 
 ## License
 

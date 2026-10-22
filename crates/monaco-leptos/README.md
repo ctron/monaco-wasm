@@ -26,15 +26,8 @@ fn App() -> impl IntoView {
 }
 ```
 
-- The editor owns its text: `initial_value` is read once, and nothing is written back. Use the
-  `EditorHandle` from `on_ready` to read or replace the document, or remount the component.
-- `language`, `options`, `class`, and `style` accept values or signals; changes update the
-  existing editor in place.
-- Server-side rendering emits an empty host and never runs browser code; the editor is created
-  in the browser after hydration, and the initial text is not rendered as HTML.
-
-See the [`monaco-wasm`](https://crates.io/crates/monaco-wasm) README for deployment and Content
-Security Policy requirements.
+The [documentation](https://docs.rs/monaco-leptos) covers the properties, reading and replacing
+the text, changing options, server-side rendering and hydration, and deployment.
 
 ## License
 

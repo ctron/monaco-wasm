@@ -1,24 +1,97 @@
-//! Yew component for the Monaco editor.
+//! A [Yew](https://yew.rs) component for the [Monaco editor](https://microsoft.github.io/monaco-editor/).
 //!
-//! ```no_run
+//! Built on [`monaco_wasm`], which bundles the editor runtime and its workers: add a Cargo
+//! dependency, with no npm install, CDN, or worker configuration.
+//!
+//! ```toml
+//! [dependencies]
+//! yew = { version = "0.23", features = ["csr"] }
+//! monaco-yew = "0.1"
+//! ```
+//!
+//! # Example
+//!
+//! ```rust
 //! use monaco_yew::MonacoEditor;
 //! use yew::prelude::*;
 //!
 //! #[function_component(App)]
 //! fn app() -> Html {
+//!     html! { <MonacoEditor language="json" initial_value="{}" /> }
+//! }
+//! ```
+//!
+//! # Properties
+//!
+//! See [`MonacoEditorProps`] for the details.
+//!
+//! | Prop | Type | Default | Behavior |
+//! | --- | --- | --- | --- |
+//! | `initial_value` | `AttrValue` | empty | Read once, on mount. |
+//! | `language` | `AttrValue` | `"plaintext"` | Updates the existing model. |
+//! | `options` | [`EditorOptions`] | defaults | Updates the existing editor. |
+//! | `class` | `Classes` | none | Classes of the container. |
+//! | `style` | `AttrValue` | none | Appended to the default `height: 20rem; width: 100%; min-width: 0`. |
+//! | `on_ready` | `Callback<EditorHandle>` | none | Called once, after the editor exists. |
+//! | `on_change` | `Callback<ContentChange>` | none | Each content change, after Monaco applied it. |
+//! | `on_error` | `Callback<EditorError>` | console | Setup failures and failed updates. |
+//!
+//! # Reading the text and changing options
+//!
+//! The editor owns its text: `initial_value` is read once, and the component never writes a value
+//! back on rerender. Keep the [`EditorHandle`] passed to `on_ready` and read or replace the document
+//! through it when you need to. [`ContentChange`] carries a version, not the text, so typing never
+//! copies the document into component state.
+//!
+//! ```rust
+//! use monaco_yew::{EditorHandle, EditorOptions, MonacoEditor, WordWrap};
+//! use yew::prelude::*;
+//!
+//! #[function_component(App)]
+//! fn app() -> Html {
+//!     // Keep the handle from on_ready; reading it does not rerender.
+//!     let handle = use_mut_ref(|| None::<EditorHandle>);
+//!     let on_ready = {
+//!         let handle = handle.clone();
+//!         Callback::from(move |ready| *handle.borrow_mut() = Some(ready))
+//!     };
+//!     let save = {
+//!         let handle = handle.clone();
+//!         Callback::from(move |_: MouseEvent| {
+//!             if let Some(editor) = handle.borrow().as_ref() {
+//!                 let text = editor.value().unwrap_or_default();
+//!                 // ... store `text` somewhere
+//!                 # let _ = text;
+//!             }
+//!         })
+//!     };
+//!
+//!     let mut options = EditorOptions::default();
+//!     options.word_wrap = WordWrap::On;
+//!
 //!     html! {
-//!         <MonacoEditor language="json" initial_value="{}" />
+//!         <>
+//!             <MonacoEditor language="json" initial_value="{}" {options} {on_ready} />
+//!             <button onclick={save}>{"Save"}</button>
+//!         </>
 //!     }
 //! }
 //! ```
 //!
-//! The editor owns its text: `initial_value` is read once on mount and the
-//! component never writes a value back on rerender. Read or replace text
-//! through the [`EditorHandle`] passed to `on_ready`. To switch documents,
-//! call [`EditorHandle::replace_document`] or remount with a new `key`.
+//! To switch to a different document, call [`EditorHandle::replace_document`], or remount the
+//! component with a new `key`. Changing `initial_value` alone does nothing.
 //!
-//! Supports client-side rendering. Under server-side rendering the component
-//! renders its empty container and never touches browser APIs.
+//! Changes to `language` and `options` are validated together before either is applied. If applying
+//! one fails, the editor keeps running, the error goes to `on_error`, and the change is retried the
+//! next time that prop changes.
+//!
+//! # Rendering
+//!
+//! The component supports client-side rendering. Under server-side rendering it renders its empty
+//! container and never touches browser APIs.
+//!
+//! For deployment and Content Security Policy requirements, see
+//! [`monaco_wasm`'s deployment notes](monaco_wasm#deployment).
 
 pub use monaco_wasm::{
     self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, WordWrap, set_theme,

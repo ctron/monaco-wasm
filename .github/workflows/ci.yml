@@ -19,6 +19,10 @@ jobs:
       # Server-side rendering builds: no browser code may run here.
       - run: cargo clippy -p monaco-leptos -p leptos-hydrate --features monaco-leptos/ssr,leptos-hydrate/ssr --locked -- -D warnings
       - run: cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos --locked
+      # Crate documentation, as on docs.rs; broken intra-doc links fail.
+      - run: cargo doc --no-deps -p monaco-wasm -p monaco-yew -p monaco-leptos --locked
+        env:
+          RUSTDOCFLAGS: -D warnings
       - run: cargo package -p monaco-wasm --locked
       # The adapters are packaged after monaco-wasm is published; see tools/consumer-check.sh.
 

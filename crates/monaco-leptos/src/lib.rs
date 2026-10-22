@@ -1,6 +1,21 @@
-//! Leptos component for the Monaco editor.
+//! A [Leptos](https://leptos.dev) component for the
+//! [Monaco editor](https://microsoft.github.io/monaco-editor/).
 //!
-//! ```no_run
+//! Built on [`monaco_wasm`], which bundles the editor runtime and its workers: add a Cargo
+//! dependency, with no npm install, CDN, or worker configuration.
+//!
+//! Enable the same rendering mode on `monaco-leptos` as on Leptos: `csr`, `hydrate`, or `ssr`.
+//! There is no default.
+//!
+//! ```toml
+//! [dependencies]
+//! leptos = { version = "0.8", features = ["csr"] }
+//! monaco-leptos = { version = "0.1", features = ["csr"] }
+//! ```
+//!
+//! # Example
+//!
+//! ```rust
 //! use leptos::prelude::*;
 //! use monaco_leptos::MonacoEditor;
 //!
@@ -10,15 +25,88 @@
 //! }
 //! ```
 //!
-//! The editor owns its text: `initial_value` is read once on mount and the
-//! component never writes a value back. Read or replace text through the
-//! [`EditorHandle`] passed to `on_ready`. To switch documents, call
-//! [`EditorHandle::replace_document`] or remount the component.
+//! # Properties
 //!
-//! Enable exactly one of the `csr`, `hydrate`, or `ssr` features, matching
-//! your Leptos build. On the server the component renders an empty host and
-//! never touches browser APIs; in the browser it creates the editor once the
-//! host is mounted (after hydration claimed it, when hydrating).
+//! See [`MonacoEditor`] for the details. `language`, `options`, `class`, and `style` accept plain
+//! values or signals; callbacks accept closures.
+//!
+//! | Prop | Type | Default | Behavior |
+//! | --- | --- | --- | --- |
+//! | `initial_value` | `String` | empty | Read once, on mount. |
+//! | `language` | `Signal<String>` | `"plaintext"` | Updates the existing model. |
+//! | `options` | `Signal<EditorOptions>` | defaults | Updates the existing editor; see [`EditorOptions`]. |
+//! | `class` | `Signal<String>` | none | Classes of the container. |
+//! | `style` | `Signal<String>` | none | Appended to the default `height: 20rem; width: 100%; min-width: 0`. |
+//! | `on_ready` | `UnsyncCallback<EditorHandle>` | none | Called once, after the editor exists. |
+//! | `on_change` | `UnsyncCallback<ContentChange>` | none | Each content change, after Monaco applied it. |
+//! | `on_error` | `UnsyncCallback<EditorError>` | console | Setup failures and failed updates. |
+//!
+//! # Reading the text and changing options
+//!
+//! The editor owns its text: `initial_value` is read once, and the component never writes a value
+//! back. Keep the [`EditorHandle`] passed to `on_ready` and read or replace the document through it
+//! when you need to. [`ContentChange`] carries a version, not the text, so typing never copies the
+//! document into signals. The handle is not `Send`, so store it in local storage.
+//!
+//! ```rust
+//! use leptos::prelude::*;
+//! use monaco_leptos::{EditorHandle, EditorOptions, MonacoEditor};
+//!
+//! #[component]
+//! fn App() -> impl IntoView {
+//!     let handle = StoredValue::new_local(None::<EditorHandle>);
+//!     let read_only = RwSignal::new(false);
+//!     let options = Signal::derive(move || {
+//!         let mut options = EditorOptions::default();
+//!         options.read_only = read_only.get();
+//!         options
+//!     });
+//!     let save = move |_| {
+//!         handle.with_value(|editor| {
+//!             if let Some(editor) = editor {
+//!                 let text = editor.value().unwrap_or_default();
+//!                 // ... store `text` somewhere
+//!                 # let _ = text;
+//!             }
+//!         })
+//!     };
+//!
+//!     view! {
+//!         <MonacoEditor
+//!             language="json"
+//!             initial_value="{}"
+//!             options=options
+//!             on_ready=move |ready| handle.set_value(Some(ready))
+//!         />
+//!         <button on:click=save>"Save"</button>
+//!         <button on:click=move |_| read_only.update(|on| *on = !*on)>"Toggle read-only"</button>
+//!     }
+//! }
+//! ```
+//!
+//! To switch to a different document, call [`EditorHandle::replace_document`], or remount the
+//! component (for example inside a keyed view).
+//!
+//! Changes to `language` and `options` are validated together before either is applied. If applying
+//! one fails, the editor keeps running, the error goes to `on_error`, and the change is retried the
+//! next time that value changes.
+//!
+//! # Server-side rendering and hydration
+//!
+//! Forward your application's features:
+//!
+//! ```toml
+//! [features]
+//! hydrate = ["leptos/hydrate", "monaco-leptos/hydrate"]
+//! ssr = ["leptos/ssr", "monaco-leptos/ssr"]
+//! ```
+//!
+//! On the server the component renders an empty editor host and never runs browser code. In the
+//! browser, hydration claims that host and the editor is created afterwards; the initial text is
+//! supplied by the client and never rendered as HTML.
+//!
+//! For deployment and Content Security Policy requirements, see
+//! [`monaco_wasm`'s deployment notes](monaco_wasm#deployment).
 
 use leptos::html::Div;
 use leptos::prelude::*;

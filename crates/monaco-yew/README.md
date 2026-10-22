@@ -23,16 +23,8 @@ fn app() -> Html {
 }
 ```
 
-- The editor owns its text: `initial_value` is read once, and nothing is written back on rerender.
-  Use the `EditorHandle` from `on_ready` to read or replace the document, or remount with a new
-  `key`.
-- `language` and `options` update the existing editor in place; `on_change` reports changes,
-  `on_error` reports setup and update failures.
-- The container defaults to `height: 20rem; width: 100%`; a `style` prop is appended and can
-  override it.
-
-Supports client-side rendering. See the [`monaco-wasm`](https://crates.io/crates/monaco-wasm)
-README for deployment and Content Security Policy requirements.
+The [documentation](https://docs.rs/monaco-yew) covers the properties, reading and replacing
+the text, changing options, and deployment.
 
 ## License
 
