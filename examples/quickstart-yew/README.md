@@ -7,7 +7,7 @@ there is no npm install, CDN, or worker configuration.
 ## Run it
 
 ```sh
-cargo install trunk                 # once
+cargo binstall trunk                # once (or: cargo install trunk)
 rustup target add wasm32-unknown-unknown
 cd examples/quickstart-yew
 trunk serve --open

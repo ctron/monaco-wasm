@@ -26,11 +26,11 @@ jobs:
       # rust-toolchain.toml selects the compiler and the wasm target.
       - run: rustup show
       - uses: Swatinem/rust-cache@v2
+      - uses: cargo-bins/cargo-binstall@main
       - name: Install Trunk
-        run: |
-          curl -sSfL https://github.com/trunk-rs/trunk/releases/latest/download/trunk-x86_64-unknown-linux-gnu.tar.gz \
-            | tar -xz -C /usr/local/bin trunk
-          trunk --version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: cargo binstall -y trunk
       - id: pages
         uses: actions/configure-pages@v6
       - name: Build the site
