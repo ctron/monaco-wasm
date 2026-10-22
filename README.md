@@ -110,7 +110,7 @@ See [`examples/wasm-basic`](examples/wasm-basic).
 
 ## Compatibility
 
-| | |
+| Component | Support |
 | --- | --- |
 | Rust | 1.88 or newer |
 | Monaco | 0.57.0 (bundled) |
