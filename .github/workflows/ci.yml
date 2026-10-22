@@ -61,7 +61,11 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
-      - uses: cargo-bins/cargo-binstall@main
+      - name: Setup cargo-binstall
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
       - name: Install wasm-bindgen-cli matching Cargo.lock, wasm-pack, Trunk, and cargo-leptos
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

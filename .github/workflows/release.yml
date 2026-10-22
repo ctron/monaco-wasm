@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: cargo-bins/cargo-binstall@main
+      - name: Setup cargo-binstall
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
       - name: Setup cargo-workspaces
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

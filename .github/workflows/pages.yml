@@ -26,7 +26,11 @@ jobs:
       # rust-toolchain.toml selects the compiler and the wasm target.
       - run: rustup show
       - uses: Swatinem/rust-cache@v2
-      - uses: cargo-bins/cargo-binstall@main
+      - name: Setup cargo-binstall
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
       - name: Install Trunk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
