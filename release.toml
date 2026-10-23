@@ -1,8 +1,0 @@
-# cargo-release configuration: `cargo release <level> --execute` bumps the
-# version of all crates together, commits, creates a single `v<version>` tag,
-# and pushes. Publishing to crates.io is done by .github/workflows/release.yml
-# when the tag arrives.
-shared-version = true
-tag-name = "v{{version}}"
-publish = false
-allow-branch = ["main"]

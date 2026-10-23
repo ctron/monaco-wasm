@@ -108,7 +108,7 @@ node browser-tests/quickstart.mjs site/dioxus --base /monaco-wasm/dioxus/
 ## Releasing
 
 Releases use [cargo-release](https://github.com/crate-ci/cargo-release), configured in
-`release.toml`. From an up-to-date `main` with green CI:
+`[workspace.metadata.release]` in `Cargo.toml`. From an up-to-date `main` with green CI:
 
 ```sh
 cargo release minor            # dry run: shows what would change

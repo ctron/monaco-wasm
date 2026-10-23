@@ -52,3 +52,13 @@ web-sys = "0.3.77"
 # The option structs are #[non_exhaustive]; assigning fields after
 # Default::default() is the intended construction pattern.
 field_reassign_with_default = "allow"
+
+# cargo-release configuration: `cargo release <level> --execute` bumps the
+# version of all crates together, commits, creates a single `v<version>` tag,
+# and pushes. Publishing to crates.io is done by .github/workflows/release.yml
+# when the tag arrives.
+[workspace.metadata.release]
+shared-version = true
+tag-name = "v{{version}}"
+publish = false
+allow-branch = ["main"]
