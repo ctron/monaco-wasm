@@ -1,8 +1,8 @@
 name: Pages
 
 # Builds the site (landing page and every hosted example in
-# examples/pages/examples.json) with tools/build-pages.sh, checks it in Chrome,
-# and deploys it to GitHub Pages.
+# examples/pages/examples.json) with tools/build-pages.sh, one job per example,
+# checks it in Chrome, and deploys it to GitHub Pages.
 # Enable Pages with "Source: GitHub Actions" in the repository settings.
 
 on:
@@ -20,33 +20,73 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The base path, and the build matrix: every example in examples.json that
+  # has a build.
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      base: ${{ steps.pages.outputs.base_path }}/
+      examples: ${{ steps.examples.outputs.examples }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: pages
+        uses: actions/configure-pages@v6
+      - id: examples
+        run: echo "examples=$(jq -c '[.examples[] | select(.build) | {id, build}]' examples/pages/examples.json)" >> "$GITHUB_OUTPUT"
+
+  # Each example in its own job; they do not share a build anyway, since their
+  # dependency features differ.
   build:
+    needs: plan
+    name: build (${{ matrix.example.id }})
+    strategy:
+      matrix:
+        example: ${{ fromJSON(needs.plan.outputs.examples) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - run: rustup toolchain install stable --profile minimal --target wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.example.id }}
       - name: Setup cargo-binstall
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      - name: Install Trunk and wasm-pack
+      # The build kinds in examples.json are named after their tools.
+      - name: Install ${{ matrix.example.build }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: cargo binstall -y trunk wasm-pack
-      - id: pages
-        uses: actions/configure-pages@v6
-      - name: Build the site
+        run: cargo binstall -y "${{ matrix.example.build }}"
+      - run: tools/build-pages.sh --example "${{ matrix.example.id }}" site "${{ needs.plan.outputs.base }}"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: site-${{ matrix.example.id }}
+          path: site
+          if-no-files-found: error
+
+  # Assembles the examples and the landing page, and checks the site.
+  site:
+    needs: [plan, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: site-*
+          merge-multiple: true
+          path: site
+      - name: Add the landing page
         run: |
-          tools/build-pages.sh site "${{ steps.pages.outputs.base_path }}/" \
+          tools/build-pages.sh --landing site "${{ needs.plan.outputs.base }}" \
             "${{ github.server_url }}/${{ github.repository }}"
       - uses: actions/setup-node@v7
         with:
           node-version: 24
       - name: Check the built site in Chrome
         env:
-          BASE: ${{ steps.pages.outputs.base_path }}/
+          BASE: ${{ needs.plan.outputs.base }}
         run: |
           (cd browser-tests && npm ci)
           export CHROMIUM="$(command -v google-chrome)"
@@ -59,7 +99,7 @@ jobs:
           path: site
 
   deploy:
-    needs: build
+    needs: site
     runs-on: ubuntu-latest
     environment:
       name: github-pages

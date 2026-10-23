@@ -110,6 +110,8 @@ node browser-tests/quickstart.mjs site/dioxus --base /monaco-wasm/dioxus/
   deploys it on every push to `main`. Every example in `examples/pages/examples.json` with a
   `build` (`trunk` or `wasm-pack`) is published under its `id`; the landing page renders the
   pinned ones as cards and lists all of them. Examples without a `build` link to their source.
+  The workflow reads its build matrix from the same file and builds each example in its own job
+  (`build-pages.sh --example <id>`), then adds the landing page (`--landing`) and checks the site.
 
 ## Releasing
 
