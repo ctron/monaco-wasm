@@ -23,8 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # rust-toolchain.toml selects the compiler and the wasm target.
-      - run: rustup show
+      - run: rustup toolchain install stable --profile minimal --target wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
       - name: Setup cargo-binstall
         env:

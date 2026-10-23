@@ -48,7 +48,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v7
-      - run: rustup show
+      - run: rustup toolchain install stable --profile minimal
       - uses: rust-lang/crates-io-auth-action@v1
         id: auth
       - run: cargo publish --workspace --locked

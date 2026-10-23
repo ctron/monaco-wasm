@@ -9,13 +9,29 @@ on:
 
 jobs:
   rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        # msrv is workspace.package.rust-version.
+        rust: [msrv, stable]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # rust-toolchain.toml selects the compiler, components, and wasm target.
-      - run: rustup show
+      - name: Install Rust ${{ matrix.rust }}
+        run: |
+          toolchain=${{ matrix.rust }}
+          if [ "$toolchain" = msrv ]; then
+            toolchain=$(sed -n 's/^rust-version = "\(.*\)"/\1/p' Cargo.toml)
+          fi
+          rustup toolchain install "$toolchain" --profile minimal --component rustfmt,clippy --target wasm32-unknown-unknown
+          rustup default "$toolchain"
+      # Resolve as a consumer on that Rust would: Cargo picks dependency
+      # versions compatible with rust-version.
+      - if: matrix.rust == 'msrv'
+        run: cargo generate-lockfile
       - uses: Swatinem/rust-cache@v2
-      - run: cargo fmt --all --check
+      - if: matrix.rust == 'stable'
+        run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --target wasm32-unknown-unknown --locked -- -D warnings -A long_running_const_eval
       - run: cargo clippy -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus --all-targets --locked -- -D warnings
       # Server-side rendering builds: no browser code may run here.
@@ -26,7 +42,8 @@ jobs:
       - run: cargo doc --no-deps -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus --locked
         env:
           RUSTDOCFLAGS: -D warnings
-      - run: cargo package -p monaco-wasm --locked
+      - if: matrix.rust == 'stable'
+        run: cargo package -p monaco-wasm --locked
       # The adapters are packaged after monaco-wasm is published; see tools/consumer-check.sh.
 
   # Public API changes against the latest release on crates.io must match the
@@ -35,31 +52,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      # rust-toolchain.toml selects the compiler.
-      - run: rustup show
       - uses: obi1kenobi/cargo-semver-checks-action@v2
-        with:
-          rust-toolchain: manual
-
-  msrv:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - name: Install the minimum supported Rust (workspace.package.rust-version)
-        run: |
-          msrv=$(sed -n 's/^rust-version = "\(.*\)"/\1/p' Cargo.toml)
-          echo "MSRV=$msrv" >> "$GITHUB_ENV"
-          rustup toolchain install "$msrv" --profile minimal
-      # Resolve as a consumer on that Rust would: Cargo picks dependency
-      # versions compatible with rust-version.
-      - run: cargo generate-lockfile
-      - run: cargo +"$MSRV" check -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus --lib
 
   browser:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: rustup show
+      - run: rustup toolchain install stable --profile minimal --target wasm32-unknown-unknown
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-node@v7
         with:
@@ -124,7 +123,7 @@ jobs:
   # succeeded. Add new jobs to `needs`.
   ci:
     if: always()
-    needs: [rust, semver, msrv, browser, runtime, bindings]
+    needs: [rust, semver, browser, runtime, bindings]
     runs-on: ubuntu-latest
     steps:
       - name: Check the results of all jobs

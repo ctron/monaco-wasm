@@ -23,7 +23,8 @@ declared without default features there, so that each member selects its renderi
 
 ## Building
 
-The toolchain is pinned in `rust-toolchain.toml`. Trunk resolves the crate from the current
+Use a current stable Rust with the `wasm32-unknown-unknown` target; CI uses the latest stable.
+The oldest supported Rust is `rust-version` in the workspace manifest (see below). Trunk resolves the crate from the current
 directory, so run it inside the example.
 
 ```sh
