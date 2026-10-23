@@ -72,7 +72,7 @@
       "source": "yew-multiple",
       "build": "trunk",
       "title": "Yew, two editors",
-      "description": "Two independent editors on one page, a draft and a read-only published copy. Text moves between them through their handles; the theme is global, so it changes both."
+      "description": "Two independent editors on one page, a draft and a read-only published copy. Publishing copies the draft through the editors' handles; the theme is global, so it changes both."
     },
     {
       "id": "yew-persist",

@@ -3,7 +3,7 @@
 //   node patterns.mjs <dist directory> multiple|persist [--base /demo/]
 //
 // Serves the Trunk output under --base and drives the page: for multiple, two
-// independent editors, copying between them, read-only, and the shared theme;
+// independent editors, publishing one into the other, read-only, and the shared theme;
 // for persist, saving to local storage after typing pauses, restoring on
 // reload, the form submit, and resetting. Set CHROMIUM to use a system
 // browser. Exits non-zero on failure.
@@ -126,11 +126,6 @@ async function multiple() {
   await typeAtEnd("#published", "nope");
   [, published] = await texts();
   check(!published.includes("nope"), "the published editor is read-only");
-
-  await typeAtEnd("#draft", "yyy");
-  await page.click("#revert");
-  [draft, published] = await texts();
-  check(draft === published && !draft.includes("yyy"), "revert copies the published text back");
 
   check((await page.inputValue("#theme")) === "vs", "the theme menu starts on the editors' light theme");
   await page.selectOption("#theme", "vs-dark");

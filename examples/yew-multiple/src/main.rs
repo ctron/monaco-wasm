@@ -1,7 +1,7 @@
 //! Two editors on one page: a draft and a read-only published copy.
 //!
 //! Each `MonacoEditor` is independent: its own model, undo history, handle,
-//! and change events. Moving text between them goes through the handles. The
+//! and change events. Copying text between them goes through the handles. The
 //! theme is the exception: Monaco has one theme per page, so `set_theme`
 //! changes every editor at once.
 
@@ -30,21 +30,6 @@ fn count(edits: &UseStateHandle<u32>) -> Callback<ContentChange> {
     Callback::from(move |_| edits.set(*edits + 1))
 }
 
-/// Replaces the document of `to` with the text of `from`.
-fn copy(from: &Handle, to: &Handle, message: &UseStateHandle<String>) -> Callback<MouseEvent> {
-    let (from, to, message) = (from.clone(), to.clone(), message.clone());
-    Callback::from(move |_| {
-        let (from, to) = (from.borrow(), to.borrow());
-        let result = match (from.as_ref(), to.as_ref()) {
-            (Some(from), Some(to)) => from.value().and_then(|text| to.replace_document(&text)),
-            _ => return,
-        };
-        if let Err(error) = result {
-            message.set(format!("Error: {error}"));
-        }
-    })
-}
-
 #[function_component(App)]
 fn app() -> Html {
     let draft = use_mut_ref(|| None::<EditorHandle>);
@@ -54,8 +39,22 @@ fn app() -> Html {
     let message = use_state(String::new);
     let theme = use_state(|| String::from("vs"));
 
-    let publish = copy(&draft, &published, &message);
-    let revert = copy(&published, &draft, &message);
+    // Replaces the published document with the text of the draft.
+    let publish = {
+        let (draft, published, message) = (draft.clone(), published.clone(), message.clone());
+        Callback::from(move |_: MouseEvent| {
+            let (draft, published) = (draft.borrow(), published.borrow());
+            let result = match (draft.as_ref(), published.as_ref()) {
+                (Some(draft), Some(published)) => draft
+                    .value()
+                    .and_then(|text| published.replace_document(&text)),
+                _ => return,
+            };
+            if let Err(error) = result {
+                message.set(format!("Error: {error}"));
+            }
+        })
+    };
     let on_theme = {
         let (theme, message) = (theme.clone(), message.clone());
         Callback::from(move |event: Event| {
@@ -79,7 +78,6 @@ fn app() -> Html {
             </header>
             <nav>
                 <button id="publish" onclick={publish}>{"Publish draft"}</button>
-                <button id="revert" onclick={revert}>{"Revert draft"}</button>
                 <label>
                     {"Theme (both editors) "}
                     <select id="theme" onchange={on_theme}>
