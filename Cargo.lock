@@ -5235,6 +5235,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "yew-multiple"
+version = "0.1.2"
+dependencies = [
+ "monaco-yew",
+ "web-sys",
+ "yew",
+]
+
+[[package]]
+name = "yew-persist"
+version = "0.1.2"
+dependencies = [
+ "gloo-storage",
+ "gloo-timers",
+ "monaco-yew",
+ "web-sys",
+ "yew",
+]
+
+[[package]]
 name = "yoke"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

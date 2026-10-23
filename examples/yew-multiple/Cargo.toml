@@ -1,0 +1,15 @@
+[package]
+name = "yew-multiple"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+monaco-yew.workspace = true
+yew = { workspace = true, features = ["csr"] }
+web-sys = { workspace = true, features = ["HtmlSelectElement"] }
+
+[lints]
+workspace = true

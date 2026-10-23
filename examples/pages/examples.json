@@ -68,6 +68,20 @@
       "description": "`monaco-dioxus` in a plain Dioxus app: read the text through an `EditorHandle`, replace the document, toggle read-only, and unmount; change events are logged to the console."
     },
     {
+      "id": "yew-multiple",
+      "source": "yew-multiple",
+      "build": "trunk",
+      "title": "Yew, two editors",
+      "description": "Two independent editors on one page, a draft and a read-only published copy. Text moves between them through their handles; the theme is global, so it changes both."
+    },
+    {
+      "id": "yew-persist",
+      "source": "yew-persist",
+      "build": "trunk",
+      "title": "Yew, saving the text",
+      "description": "Saves the document to local storage when typing pauses and restores it on reload, without copying text on every keystroke. A form reads the document on submit."
+    },
+    {
       "id": "leptos-hydrate",
       "source": "leptos-hydrate",
       "title": "Leptos, SSR and hydration",

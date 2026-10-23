@@ -118,6 +118,16 @@ jobs:
             check: |
               (cd examples/dioxus-basic && trunk build --release --locked --public-url /demo/)
               node browser-tests/smoke.mjs examples/dioxus-basic/dist
+          - example: yew-multiple
+            tools: trunk
+            check: |
+              (cd examples/yew-multiple && trunk build --release --locked --public-url /demo/)
+              node browser-tests/patterns.mjs examples/yew-multiple/dist multiple
+          - example: yew-persist
+            tools: trunk
+            check: |
+              (cd examples/yew-persist && trunk build --release --locked --public-url /demo/)
+              node browser-tests/patterns.mjs examples/yew-persist/dist persist
           - example: leptos-hydrate
             tools: cargo-leptos
             check: tools/hydrate-check.sh leptos

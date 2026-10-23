@@ -10,6 +10,7 @@ How to build, test, and release this repository. For using the crates, see the
 | `crates/monaco-wasm` | Core crate: vendored runtime (`js/`), bindings (`src/sys/`), `Editor` API |
 | `crates/monaco-yew`, `crates/monaco-leptos`, `crates/monaco-dioxus` | Framework components |
 | `examples/wasm-basic`, `yew-basic`, `leptos-basic`, `dioxus-basic` | Minimal demos driven by the smoke test |
+| `examples/yew-multiple`, `yew-persist` | Patterns: two editors on one page; saving the text and submitting it with a form |
 | `examples/leptos-hydrate`, `dioxus-hydrate` | SSR and hydration fixtures (cargo-leptos, dx) |
 | `examples/quickstart-yew`, `quickstart-leptos`, `quickstart-dioxus` | Playgrounds, pinned on the GitHub Pages site |
 | `examples/pages` | The landing page; `examples.json` lists every example, how it is built, and which are pinned as cards |
@@ -82,6 +83,8 @@ node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack 
 node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk builds
 node browser-tests/smoke.mjs examples/leptos-basic/dist
 node browser-tests/smoke.mjs examples/dioxus-basic/dist
+node browser-tests/patterns.mjs examples/yew-multiple/dist multiple
+node browser-tests/patterns.mjs examples/yew-persist/dist persist
 tools/hydrate-check.sh leptos                             # SSR + hydration fixture (cargo-leptos), port 3400
 tools/hydrate-check.sh dioxus                             # fullstack + hydration fixture (dx), port 3410
 
