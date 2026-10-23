@@ -112,6 +112,37 @@ pre {
   margin-bottom: 0.4rem;
 }
 
+.example-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.example-list li {
+  padding: 1rem 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.example-list h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1.05rem;
+}
+
+.example-list p {
+  margin: 0 0 0.5rem;
+  color: var(--muted);
+}
+
+.example-list .example-links {
+  margin: 0;
+  font-weight: 600;
+}
+
 footer {
   margin-top: 2rem;
   color: var(--muted);

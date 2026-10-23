@@ -3,11 +3,12 @@
 //   node pages.mjs <site directory> [--base /monaco-wasm/] [--screenshots <dir>]
 //
 // Serves the site under --base, checks the landing page in light, dark, and
-// phone-sized layouts, and follows the links to both quickstarts. The
-// quickstarts themselves are covered in depth by quickstart.mjs. Set
-// CHROMIUM to use a system browser. Exits non-zero on failure.
+// phone-sized layouts, checks that the cards and the example list match the
+// site's examples.json, and opens every hosted example. The quickstarts
+// themselves are covered in depth by quickstart.mjs. Set CHROMIUM to use a
+// system browser. Exits non-zero on failure.
 
-import { createReadStream, existsSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
 import { chromium } from "playwright-core";
@@ -25,7 +26,16 @@ if (!args[0] || !existsSync(join(root, "index.html"))) {
   process.exit(2);
 }
 
-const TYPES = { ".html": "text/html", ".js": "text/javascript", ".wasm": "application/wasm", ".css": "text/css" };
+const { examples } = JSON.parse(readFileSync(join(root, "examples.json"), "utf8"));
+const hosted = examples.filter((example) => example.build);
+
+const TYPES = {
+  ".html": "text/html",
+  ".js": "text/javascript",
+  ".json": "application/json",
+  ".wasm": "application/wasm",
+  ".css": "text/css",
+};
 const server = createServer((request, response) => {
   const url = new URL(request.url, "http://localhost");
   if (!url.pathname.startsWith(basePath)) {
@@ -75,32 +85,42 @@ async function open(colorScheme, viewport) {
     if (!url.startsWith(origin) && !/^(blob|data):/.test(url)) external.push(url);
   });
   await page.goto(base);
+  await page.waitForSelector(".example-list li");
   return page;
 }
 
 try {
   const page = await open("light", { width: 1280, height: 900 });
   check((await page.title()).includes("monaco-wasm"), "landing page loads");
-  const links = await page.locator(".card a.button").evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")));
-  check(JSON.stringify(links) === JSON.stringify(["yew/", "leptos/", "dioxus/"]), `quickstart links ${JSON.stringify(links)}`);
+  const hrefs = (selector) => page.locator(selector).evaluateAll((anchors) => anchors.map((a) => a.getAttribute("href")));
+  const pinned = examples.filter((example) => example.pinned).map((example) => `${example.id}/`);
+  const cards = await hrefs(".card a.button");
+  check(JSON.stringify(cards) === JSON.stringify(pinned), `cards link the pinned examples ${JSON.stringify(cards)}`);
+  const items = await page.locator(".example-list li").count();
+  check(items === examples.length, `example list shows all ${examples.length} examples (${items})`);
+  const links = await hrefs(".example-list a.open");
+  const expected = hosted.map((example) => `${example.id}/`);
+  check(JSON.stringify(links) === JSON.stringify(expected), `example list links the hosted examples ${JSON.stringify(links)}`);
+  const sources = await hrefs(".example-list a:not(.open)");
+  check(
+    sources.every((href, index) => href.endsWith(`/tree/main/examples/${examples[index].source}`)),
+    "every example links its source",
+  );
   const repository = await page.locator(".links a").getAttribute("href");
   check(!repository.includes("__REPOSITORY_URL__"), `repository link filled in (${repository})`);
   const clipped = await page.evaluate(() => [...document.querySelectorAll("pre")].filter((pre) => pre.scrollWidth > pre.clientWidth).length);
   check(clipped === 0, `code snippets fit without scrolling on a desktop (${clipped} clipped)`);
   if (screenshots) await page.screenshot({ path: join(screenshots, "landing-light.png"), fullPage: true });
 
-  for (const [label, heading] of [
-    ["Open the Yew quickstart", "monaco-yew"],
-    ["Open the Leptos quickstart", "monaco-leptos"],
-    ["Open the Dioxus quickstart", "monaco-dioxus"],
-  ]) {
+  for (const example of hosted) {
     await page.goto(base);
-    await page.click(`text=${label}`);
+    await page.waitForSelector(".example-list li");
+    await page.click(`.example-list a.open[href="${example.id}/"]`);
     const loaded = await page
       .waitForSelector(".monaco-editor .view-lines", { timeout: 20000 })
       .then(() => true)
       .catch(() => false);
-    check(loaded && (await page.textContent("h1")) === heading, `${label} opens a working editor`);
+    check(loaded && new URL(page.url()).pathname === `${basePath}${example.id}/`, `${example.title} opens a working editor`);
   }
 
   const dark = await open("dark", { width: 1280, height: 900 });

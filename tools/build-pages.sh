@@ -1,6 +1,7 @@
 #!/bin/sh
-# Builds the GitHub Pages site: the landing page at the root and the Yew,
-# Leptos, and Dioxus quickstarts under yew/, leptos/, and dioxus/.
+# Builds the GitHub Pages site: the landing page at the root and every example
+# in examples/pages/examples.json that has a build, each under its id. Needs
+# jq, Trunk, and wasm-pack.
 #
 #   tools/build-pages.sh <output dir> [base path] [repository URL]
 #
@@ -26,15 +27,29 @@ repository=${3:-https://github.com/}
 rm -rf "$out"
 mkdir -p "$out"
 
-for framework in yew leptos dioxus; do
-    (
-        cd "$repo/examples/quickstart-$framework"
-        trunk build --release --locked --public-url "${base}${framework}/" --dist "$out/$framework"
-    )
-done
+pages="$repo/examples/pages"
+# Assigned first, so a jq failure stops the script.
+builds=$(jq -r '.examples[] | select(.build) | "\(.id) \(.source) \(.build)"' "$pages/examples.json")
+printf '%s\n' "$builds" |
+    while read -r id source build; do
+        src="$repo/examples/$source"
+        case "$build" in
+            trunk)
+                (cd "$src" && trunk build --release --locked --public-url "${base}${id}/" --dist "$out/$id" </dev/null)
+                ;;
+            wasm-pack)
+                wasm-pack build "$src" --target web --out-dir "$out/$id/pkg" --no-pack -- --locked </dev/null
+                cp "$src"/*.html "$src"/*.js "$src"/*.css "$out/$id/"
+                ;;
+            *)
+                echo "unknown build '$build' for $id" >&2
+                exit 1
+                ;;
+        esac
+    done
 
-cp "$repo/examples/pages/style.css" "$out/"
-sed "s#__REPOSITORY_URL__#$repository#g" "$repo/examples/pages/index.html" >"$out/index.html"
-rm -f "$out"/*/.trunk-lock
+cp "$pages/style.css" "$pages/examples.js" "$pages/examples.json" "$out/"
+sed "s#__REPOSITORY_URL__#$repository#g" "$pages/index.html" >"$out/index.html"
+rm -f "$out"/*/.trunk-lock "$out"/*/pkg/.gitignore
 
 echo "built $out for $base"

@@ -11,7 +11,8 @@ How to build, test, and release this repository. For using the crates, see the
 | `crates/monaco-yew`, `crates/monaco-leptos`, `crates/monaco-dioxus` | Framework components |
 | `examples/wasm-basic`, `yew-basic`, `leptos-basic`, `dioxus-basic` | Minimal demos driven by the smoke test |
 | `examples/leptos-hydrate`, `dioxus-hydrate` | SSR and hydration fixtures (cargo-leptos, dx) |
-| `examples/quickstart-yew`, `quickstart-leptos`, `quickstart-dioxus`, `pages` | The GitHub Pages site |
+| `examples/quickstart-yew`, `quickstart-leptos`, `quickstart-dioxus` | Playgrounds, pinned on the GitHub Pages site |
+| `examples/pages` | The landing page; `examples.json` lists every example, how it is built, and which are pinned as cards |
 | `tools/runtime` | Builds the vendored Monaco runtime (Node, esbuild) |
 | `tools/bindings` | Generates `src/sys/generated.rs` (ts-gen) |
 | `browser-tests` | Playwright scripts for the demos and the site |
@@ -84,7 +85,7 @@ node browser-tests/smoke.mjs examples/dioxus-basic/dist
 tools/hydrate-check.sh leptos                             # SSR + hydration fixture (cargo-leptos), port 3400
 tools/hydrate-check.sh dioxus                             # fullstack + hydration fixture (dx), port 3410
 
-# The GitHub Pages site, as deployed
+# The GitHub Pages site, as deployed (needs jq, Trunk, and wasm-pack)
 tools/build-pages.sh site /monaco-wasm/
 node browser-tests/pages.mjs site --base /monaco-wasm/
 node browser-tests/quickstart.mjs site/yew --base /monaco-wasm/yew/
@@ -103,7 +104,9 @@ node browser-tests/quickstart.mjs site/dioxus --base /monaco-wasm/dioxus/
   if all other jobs did; it is the check to require in branch protection. Add new jobs to its
   `needs`.
 - `.github/workflows/pages.yml`: builds the site with `tools/build-pages.sh`, checks it, and
-  deploys it on every push to `main`.
+  deploys it on every push to `main`. Every example in `examples/pages/examples.json` with a
+  `build` (`trunk` or `wasm-pack`) is published under its `id`; the landing page renders the
+  pinned ones as cards and lists all of them. Examples without a `build` link to their source.
 
 ## Releasing
 

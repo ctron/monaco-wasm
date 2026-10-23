@@ -7,6 +7,7 @@
     <title>monaco-wasm: Monaco for Yew, Leptos, and Dioxus</title>
     <link rel="icon" href="data:," />
     <link rel="stylesheet" href="style.css" />
+    <script type="module" src="examples.js"></script>
   </head>
   <body>
     <header class="hero">
@@ -20,52 +21,8 @@
     </header>
 
     <main>
-      <section class="cards" aria-label="Quickstarts">
-        <article class="card">
-          <h2>Yew</h2>
-          <p>A <code>MonacoEditor</code> component for Yew 0.23.</p>
-          <pre><code>[dependencies]
-yew = { version = "0.23", features = ["csr"] }
-monaco-yew = "0.1"</code></pre>
-          <pre><code>html! {
-    &lt;MonacoEditor
-        language="json"
-        initial_value="{}"
-    /&gt;
-}</code></pre>
-          <a class="button" href="yew/">Open the Yew quickstart</a>
-        </article>
-
-        <article class="card">
-          <h2>Leptos</h2>
-          <p>A <code>MonacoEditor</code> component for Leptos 0.8, with CSR, SSR, and hydration.</p>
-          <pre><code>[dependencies]
-leptos = { version = "0.8", features = ["csr"] }
-monaco-leptos = { version = "0.1", features = ["csr"] }</code></pre>
-          <pre><code>view! {
-    &lt;MonacoEditor
-        language="json"
-        initial_value="{}"
-    /&gt;
-}</code></pre>
-          <a class="button" href="leptos/">Open the Leptos quickstart</a>
-        </article>
-
-        <article class="card">
-          <h2>Dioxus</h2>
-          <p>A <code>MonacoEditor</code> component for Dioxus 0.7, for web and fullstack apps.</p>
-          <pre><code>[dependencies]
-dioxus = { version = "0.7", features = ["web"] }
-monaco-dioxus = { version = "0.1", features = ["web"] }</code></pre>
-          <pre><code>rsx! {
-    MonacoEditor {
-        language: "json",
-        initial_value: "{{}}",
-    }
-}</code></pre>
-          <a class="button" href="dioxus/">Open the Dioxus quickstart</a>
-        </article>
-      </section>
+      <!-- Filled from examples.json by examples.js. -->
+      <section class="cards" aria-label="Quickstarts"></section>
 
       <section class="features">
         <h2>What you get</h2>
@@ -77,6 +34,11 @@ monaco-dioxus = { version = "0.1", features = ["web"] }</code></pre>
           <li><strong>Plain Rust/WASM too.</strong> <code>monaco-wasm</code> is the framework-free core all three components build on.</li>
           <li><strong>Strict CSP works</strong> with <code>worker-src blob:</code>, <code>style-src 'unsafe-inline'</code>, and <code>font-src data:</code>.</li>
         </ul>
+      </section>
+
+      <section class="examples">
+        <h2>All examples</h2>
+        <ul class="example-list"></ul>
       </section>
     </main>
 

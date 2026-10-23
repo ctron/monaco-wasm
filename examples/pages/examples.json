@@ -1,0 +1,83 @@
+{
+  "examples": [
+    {
+      "id": "yew",
+      "source": "quickstart-yew",
+      "build": "trunk",
+      "pinned": true,
+      "title": "Yew",
+      "description": "A `MonacoEditor` component for Yew 0.23.",
+      "snippets": [
+        "[dependencies]\nyew = { version = \"0.23\", features = [\"csr\"] }\nmonaco-yew = \"0.1\"",
+        "html! {\n    <MonacoEditor\n        language=\"json\"\n        initial_value=\"{}\"\n    />\n}"
+      ],
+      "link": "Open the Yew quickstart"
+    },
+    {
+      "id": "leptos",
+      "source": "quickstart-leptos",
+      "build": "trunk",
+      "pinned": true,
+      "title": "Leptos",
+      "description": "A `MonacoEditor` component for Leptos 0.8, with CSR, SSR, and hydration.",
+      "snippets": [
+        "[dependencies]\nleptos = { version = \"0.8\", features = [\"csr\"] }\nmonaco-leptos = { version = \"0.1\", features = [\"csr\"] }",
+        "view! {\n    <MonacoEditor\n        language=\"json\"\n        initial_value=\"{}\"\n    />\n}"
+      ],
+      "link": "Open the Leptos quickstart"
+    },
+    {
+      "id": "dioxus",
+      "source": "quickstart-dioxus",
+      "build": "trunk",
+      "pinned": true,
+      "title": "Dioxus",
+      "description": "A `MonacoEditor` component for Dioxus 0.7, for web and fullstack apps.",
+      "snippets": [
+        "[dependencies]\ndioxus = { version = \"0.7\", features = [\"web\"] }\nmonaco-dioxus = { version = \"0.1\", features = [\"web\"] }",
+        "rsx! {\n    MonacoEditor {\n        language: \"json\",\n        initial_value: \"{{}}\",\n    }\n}"
+      ],
+      "link": "Open the Dioxus quickstart"
+    },
+    {
+      "id": "wasm-basic",
+      "source": "wasm-basic",
+      "build": "wasm-pack",
+      "title": "Plain Rust/WASM",
+      "description": "`monaco-wasm` without a framework, built with wasm-pack. Buttons read the text, replace the document, toggle read-only, and unmount the editor."
+    },
+    {
+      "id": "yew-basic",
+      "source": "yew-basic",
+      "build": "trunk",
+      "title": "Yew, minimal",
+      "description": "`monaco-yew` in a plain Yew app: read the text through an `EditorHandle`, replace the document, toggle read-only, and unmount; change events are logged to the console."
+    },
+    {
+      "id": "leptos-basic",
+      "source": "leptos-basic",
+      "build": "trunk",
+      "title": "Leptos, minimal",
+      "description": "`monaco-leptos` in a plain Leptos app: read the text through an `EditorHandle`, replace the document, toggle read-only, and unmount; change events are logged to the console."
+    },
+    {
+      "id": "dioxus-basic",
+      "source": "dioxus-basic",
+      "build": "trunk",
+      "title": "Dioxus, minimal",
+      "description": "`monaco-dioxus` in a plain Dioxus app: read the text through an `EditorHandle`, replace the document, toggle read-only, and unmount; change events are logged to the console."
+    },
+    {
+      "id": "leptos-hydrate",
+      "source": "leptos-hydrate",
+      "title": "Leptos, SSR and hydration",
+      "description": "Server rendering with cargo-leptos and Axum; the editor is created after hydration. Needs a server, so it is not hosted here."
+    },
+    {
+      "id": "dioxus-hydrate",
+      "source": "dioxus-hydrate",
+      "title": "Dioxus, fullstack",
+      "description": "A fullstack Dioxus app built with `dx`; the editor is created after hydration. Needs a server, so it is not hosted here."
+    }
+  ]
+}
