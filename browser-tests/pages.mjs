@@ -70,9 +70,8 @@ const BENIGN = /The `integrity` attribute is currently ignored for preload desti
 const browser = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
 const problems = [];
 const external = [];
-async function open(colorScheme, viewport) {
-  const context = await browser.newContext({ colorScheme, viewport });
-  const page = await context.newPage();
+// Also covers the tabs the examples open in.
+function watch(page) {
   page.on("console", (m) => {
     if (["error", "warning"].includes(m.type()) && !BENIGN.test(m.text())) problems.push(m.text());
   });
@@ -84,6 +83,11 @@ async function open(colorScheme, viewport) {
     const url = request.url();
     if (!url.startsWith(origin) && !/^(blob|data):/.test(url)) external.push(url);
   });
+}
+async function open(colorScheme, viewport) {
+  const context = await browser.newContext({ colorScheme, viewport });
+  context.on("page", watch);
+  const page = await context.newPage();
   await page.goto(base);
   await page.waitForSelector(".example-list li");
   return page;
@@ -121,15 +125,22 @@ try {
   check(clipped === 0, `code snippets fit without scrolling on a desktop (${clipped} clipped)`);
   if (screenshots) await page.screenshot({ path: join(screenshots, "landing-light.png"), fullPage: true });
 
+  const targets = await page
+    .locator(".card a.button, .example-list a.open")
+    .evaluateAll((anchors) => anchors.map((a) => `${a.target} ${a.rel}`));
+  check(
+    targets.length === hosted.length && targets.every((target) => target === "_blank noopener"),
+    "examples open in a new tab",
+  );
   for (const example of hosted) {
-    await page.goto(base);
-    await page.waitForSelector(".example-list li");
-    await page.click(example.pinned ? `.card a.button[href="${example.id}/"]` : `.example-list a.open[href="${example.id}/"]`);
-    const loaded = await page
+    const link = example.pinned ? `.card a.button[href="${example.id}/"]` : `.example-list a.open[href="${example.id}/"]`;
+    const [tab] = await Promise.all([page.waitForEvent("popup"), page.click(link)]);
+    const loaded = await tab
       .waitForSelector(".monaco-editor .view-lines", { timeout: 20000 })
       .then(() => true)
       .catch(() => false);
-    check(loaded && new URL(page.url()).pathname === `${basePath}${example.id}/`, `${example.title} opens a working editor`);
+    check(loaded && new URL(tab.url()).pathname === `${basePath}${example.id}/`, `${example.title} opens a working editor`);
+    await tab.close();
   }
 
   const dark = await open("dark", { width: 1280, height: 900 });
