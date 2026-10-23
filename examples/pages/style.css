@@ -51,11 +51,16 @@ a {
   color: var(--muted);
 }
 
-.cards {
+/* The example list uses the cards' columns, so both line up. */
+.cards,
+.example-list {
   display: grid;
   /* Side by side only when the Cargo snippets fit without scrolling. */
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 31rem), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 31rem), 1fr));
   gap: 1rem;
+}
+
+.cards {
   margin: 2rem 0;
 }
 
@@ -104,25 +109,14 @@ pre {
   filter: brightness(1.1);
 }
 
-.features ul {
-  padding-left: 1.2rem;
-}
-
-.features li {
-  margin-bottom: 0.4rem;
-}
-
 .example-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
-  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .example-list li {
-  padding: 1rem 1.25rem;
+  padding: 1.25rem;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;

@@ -4,7 +4,7 @@
 //
 // Serves the site under --base, checks the landing page in light, dark, and
 // phone-sized layouts, checks that the cards and the example list match the
-// site's examples.json, and opens every hosted example. The quickstarts
+// site's examples.json and line up, and opens every hosted example. The quickstarts
 // themselves are covered in depth by quickstart.mjs. Set CHROMIUM to use a
 // system browser. Exits non-zero on failure.
 
@@ -96,16 +96,25 @@ try {
   const pinned = examples.filter((example) => example.pinned).map((example) => `${example.id}/`);
   const cards = await hrefs(".card a.button");
   check(JSON.stringify(cards) === JSON.stringify(pinned), `cards link the pinned examples ${JSON.stringify(cards)}`);
+  const others = examples.filter((example) => !example.pinned);
   const items = await page.locator(".example-list li").count();
-  check(items === examples.length, `example list shows all ${examples.length} examples (${items})`);
+  check(items === others.length, `example list shows the ${others.length} other examples (${items})`);
   const links = await hrefs(".example-list a.open");
-  const expected = hosted.map((example) => `${example.id}/`);
-  check(JSON.stringify(links) === JSON.stringify(expected), `example list links the hosted examples ${JSON.stringify(links)}`);
+  const expected = others.filter((example) => example.build).map((example) => `${example.id}/`);
+  check(JSON.stringify(links) === JSON.stringify(expected), `example list links the hosted ones ${JSON.stringify(links)}`);
   const sources = await hrefs(".example-list a:not(.open)");
   check(
-    sources.every((href, index) => href.endsWith(`/tree/main/examples/${examples[index].source}`)),
-    "every example links its source",
+    sources.length === others.length &&
+      sources.every((href, index) => href.endsWith(`/tree/main/examples/${others[index].source}`)),
+    "every listed example links its source",
   );
+  const columns = await page.evaluate(() =>
+    [".cards > :first-child", ".example-list > :first-child"].map((s) => {
+      const box = document.querySelector(s).getBoundingClientRect();
+      return [Math.round(box.left), Math.round(box.width)];
+    }),
+  );
+  check(JSON.stringify(columns[0]) === JSON.stringify(columns[1]), `the list lines up with the cards ${JSON.stringify(columns)}`);
   const repository = await page.locator(".links a").getAttribute("href");
   check(!repository.includes("__REPOSITORY_URL__"), `repository link filled in (${repository})`);
   const clipped = await page.evaluate(() => [...document.querySelectorAll("pre")].filter((pre) => pre.scrollWidth > pre.clientWidth).length);
@@ -115,7 +124,7 @@ try {
   for (const example of hosted) {
     await page.goto(base);
     await page.waitForSelector(".example-list li");
-    await page.click(`.example-list a.open[href="${example.id}/"]`);
+    await page.click(example.pinned ? `.card a.button[href="${example.id}/"]` : `.example-list a.open[href="${example.id}/"]`);
     const loaded = await page
       .waitForSelector(".monaco-editor .view-lines", { timeout: 20000 })
       .then(() => true)

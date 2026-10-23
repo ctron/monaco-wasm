@@ -1,4 +1,4 @@
-// Renders examples.json: pinned examples as cards, every example in the list.
+// Renders examples.json: pinned examples as cards, the others in the list below.
 // Examples without a build are not hosted and link to their source instead.
 
 const repository = document.querySelector(".links a").href.replace(/\/$/, "");
@@ -33,18 +33,20 @@ document.querySelector(".cards").append(
 );
 
 document.querySelector(".example-list").append(
-  ...examples.map((example) =>
-    element(
-      "li",
-      {},
-      element("h3", {}, example.title),
-      element("p", {}, ...text(example.description)),
+  ...examples
+    .filter((example) => !example.pinned)
+    .map((example) =>
       element(
-        "p",
-        { className: "example-links" },
-        ...(example.build ? [element("a", { className: "open", href: `${example.id}/` }, "Open"), " · "] : []),
-        element("a", { href: sourceUrl(example) }, "Source"),
+        "li",
+        {},
+        element("h3", {}, example.title),
+        element("p", {}, ...text(example.description)),
+        element(
+          "p",
+          { className: "example-links" },
+          ...(example.build ? [element("a", { className: "open", href: `${example.id}/` }, "Open"), " · "] : []),
+          element("a", { href: sourceUrl(example) }, "Source"),
+        ),
       ),
     ),
-  ),
 );
