@@ -77,13 +77,12 @@ cargo test -p monaco-wasm -p monaco-yew -p monaco-leptos -p monaco-dioxus \
   --features monaco-dioxus/web --target wasm32-unknown-unknown
 
 cd browser-tests && npm ci && cd ..
-node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build
+node browser-tests/smoke.mjs examples/wasm-basic          # after the wasm-pack build; --csp "<policy>" also
 node browser-tests/smoke.mjs examples/yew-basic/dist      # after the Trunk builds
 node browser-tests/smoke.mjs examples/leptos-basic/dist
 node browser-tests/smoke.mjs examples/dioxus-basic/dist
 tools/hydrate-check.sh leptos                             # SSR + hydration fixture (cargo-leptos), port 3400
 tools/hydrate-check.sh dioxus                             # fullstack + hydration fixture (dx), port 3410
-tools/consumer-check.sh                                   # packaged crate, Node stubbed out, with and without CSP
 
 # The GitHub Pages site, as deployed
 tools/build-pages.sh site /monaco-wasm/
@@ -93,14 +92,14 @@ node browser-tests/quickstart.mjs site/leptos --base /monaco-wasm/leptos/
 node browser-tests/quickstart.mjs site/dioxus --base /monaco-wasm/dioxus/
 ```
 
-`tools/consumer-check.sh` verifies that building against the packaged crate never invokes Node.
-
 ## CI and GitHub Pages
 
-- `.github/workflows/ci.yml`: formatting, clippy (wasm, native, SSR), semver checks against the
-  latest crates.io release (cargo-semver-checks), the minimum Rust version
-  with a freshly resolved lockfile, all browser tests, the demos, the hydration fixture, the
-  packaged-consumer check, packaging, and the runtime and bindings checks. The final `ci` job succeeds only
+- `.github/workflows/ci.yml`: formatting, clippy (wasm, native, SSR) and tests on both the minimum
+  Rust version (with a freshly resolved lockfile) and stable, semver checks against the latest
+  crates.io release (cargo-semver-checks), the crates' browser tests, and the runtime and bindings
+  checks. The `package` job packages the crates and uploads them; the `examples` matrix then
+  replaces `crates/` with those packages in each job and builds and checks one example in Chrome,
+  so every example runs against exactly what would be published. The final `ci` job succeeds only
   if all other jobs did; it is the check to require in branch protection. Add new jobs to its
   `needs`.
 - `.github/workflows/pages.yml`: builds the site with `tools/build-pages.sh`, checks it, and
