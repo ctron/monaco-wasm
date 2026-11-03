@@ -38,10 +38,10 @@ wasm-pack build examples/wasm-basic --target web --out-dir pkg --no-pack
 (cd examples/dioxus-basic && trunk build --release --public-url /demo/)
 ```
 
-A clean build of `monaco-wasm` takes about 65 s: wasm-bindgen copies the 5 MiB runtime snippet into
-the WASM custom section through const evaluation. Incremental builds are unaffected. This cost is
-accepted for now; alternatives (compressed workers, runtime evaluation, an upstream wasm-bindgen
-fix) are deferred.
+With wasm-bindgen older than 0.2.130, a clean build of `monaco-wasm` takes about 65 s because it
+copies the 5 MiB runtime snippet into the WASM custom section through const evaluation.
+With 0.2.130 or newer, compiling `monaco-wasm` takes under a second. Incremental builds are
+unaffected. Older versions remain supported; see the README for how to update an existing lockfile.
 
 ## Vendored runtime
 
