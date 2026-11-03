@@ -151,6 +151,6 @@ versions a 1.88 user can build; CI checks this.
 | `monaco-wasm-0.1.0.crate` | 1.4 MiB |
 | example WASM after wasm-opt | 58 KiB |
 
-Tested with rustc 1.99.0, wasm-bindgen 0.2.129, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
+Tested with rustc 1.99.0, wasm-bindgen 0.2.130, wasm-pack 0.15.0, Trunk 0.22.0, Yew 0.23.0,
 Leptos 0.8.22, leptos_axum 0.8.10, cargo-leptos 0.3.7, Dioxus and dioxus-cli 0.7.10, esbuild 0.28.2, ts-gen 5341b86,
 TypeScript 5.9.3, and Chromium.

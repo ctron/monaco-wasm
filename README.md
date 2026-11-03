@@ -120,6 +120,13 @@ See [`examples/wasm-basic`](examples/wasm-basic).
 | Dioxus | 0.7 (web, fullstack) |
 | Browsers | Tested with Chromium |
 
+> [!TIP]
+> Use wasm-bindgen 0.2.130 or newer. Older versions take about a minute to compile `monaco-wasm`
+> after every clean or update, because of the size of the bundled editor runtime. With 0.2.130 it
+> takes under a second. To update an existing lock file, run
+> `cargo update -p wasm-bindgen -p web-sys -p js-sys`, since `web-sys` and `js-sys` pin the
+> wasm-bindgen version.
+
 ## Development
 
 Building, testing, and the maintainer tooling are described in [DEVELOPMENT.md](DEVELOPMENT.md).
