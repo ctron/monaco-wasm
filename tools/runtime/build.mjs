@@ -32,53 +32,7 @@ const RUNTIME_GLOBAL = "__monacoWasmRuntime";
 //
 // Every source patch must apply; a mismatch after a Monaco upgrade fails the
 // build instead of silently shipping an unresolved import.
-const WORKER_URL_PATTERN = /new URL\((['"])[^'"]+\1,\s*import\.meta\.url\)/g;
-const SOURCE_PATCHES = {
-  "editor/standalone/browser/services/standaloneWebWorkerService.js": [
-    // Only an error message string mentions import.meta.url here.
-    ['import.meta.url)', 'import_meta_url)'],
-  ],
-  "editor/common/diff/externalLinesDiffComputer.js": [
-    [
-      "import(/* webpackIgnore: true */ /* @vite-ignore */ `${url}`)",
-      'Promise.reject(new Error("monaco-wasm: the external diff computer is not bundled"))',
-    ],
-  ],
-  "platform/webWorker/browser/webWorkerServiceImpl.js": [
-    [
-      "`await import(ttPolicy?.createScriptURL(${JSON.stringify(workerScriptUrl)}) ?? ${JSON.stringify(workerScriptUrl)});`",
-      '"throw new Error(\'monaco-wasm: URL-based workers are not supported\');"',
-    ],
-  ],
-};
-
-const sourcePatchPlugin = {
-  name: "monaco-source-patches",
-  setup(build) {
-    build.onLoad({ filter: /\.js$/ }, (args) => {
-      const path = args.path.replaceAll("\\", "/");
-      const patchKey = Object.keys(SOURCE_PATCHES).find((key) => path.endsWith(`/esm/vs/${key}`));
-      const source = readFileSync(args.path, "utf8");
-      if (patchKey === undefined && !source.includes("import.meta")) {
-        return undefined;
-      }
-      let contents = source.replace(
-        WORKER_URL_PATTERN,
-        '(() => { throw new Error("monaco-wasm: worker URLs are provided by MonacoEnvironment.getWorker"); })()',
-      );
-      for (const [from, to] of SOURCE_PATCHES[patchKey] ?? []) {
-        if (!contents.includes(from)) {
-          throw new Error(`source patch for ${patchKey} no longer applies: ${from}`);
-        }
-        contents = contents.replaceAll(from, to);
-      }
-      if (contents.includes("import.meta")) {
-        throw new Error(`unhandled import.meta in ${relative(here, args.path)}`);
-      }
-      return { contents, loader: "js" };
-    });
-  },
-};
+import { sourcePatchPlugin } from './source-patches.mjs';
 
 const common = {
   absWorkingDir: here,
@@ -173,6 +127,9 @@ function packageNotices(name) {
 
 async function build() {
   const main = await bundle(MAIN_ENTRY, { globalName: RUNTIME_GLOBAL });
+  if (main.inputs.some(path => /\/yaml\//.test(path))) {
+    throw new Error('YAML assets belong in the optional module');
+  }
   if (main.files[".css"] === undefined) {
     throw new Error("editor bundle produced no stylesheet");
   }
@@ -209,7 +166,7 @@ async function build() {
     packages.map(packageNotices).join("\n\n");
 
   const inputHashes = {};
-  for (const file of ["build.mjs", "package-lock.json", MAIN_ENTRY, BRIDGE]) {
+  for (const file of ["build.mjs", "source-patches.mjs", "package-lock.json", MAIN_ENTRY, BRIDGE]) {
     inputHashes[file] = sha256(readFileSync(join(here, file)));
   }
   const manifest = {

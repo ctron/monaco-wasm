@@ -12,15 +12,16 @@
     }
   },
   "inputs": {
-    "build.mjs": "350a09976f9807968e4e4a7f867f9d449fa9ef609d1568607b43397c12e9303d",
+    "build.mjs": "05b50a599749ee6a3f4b70bde16c00bcb008d3765a571546c93d1f58b6bf5ce4",
+    "source-patches.mjs": "c0a99a8b4de44e89cc91162cae1305c4223941953f90f4f57444e1e7ad69f6ce",
     "package-lock.json": "1bf7e0472931b053af34f79a846a16200ba34878656e8a1c54e8ef37efb31730",
-    "src/editor.js": "ca6970e10d8469eaa5a0a6542667e592cff2d530fc2bf0260377b5ec83703f4a",
-    "src/bridge.js": "44dcf2265508afa1d2cbcef9f7c1142b4507f0f20217aa1eb121ecbeb87ce364"
+    "src/editor.js": "da16f332da134c15d77184d8c1b5a17b4790b86d39d15f26f4406c277a286f1d",
+    "src/bridge.js": "aca3753cb9d22b89fba292dc2714e7da2875f55695508d7d1bad9ffb3832dbfe"
   },
   "outputs": {
     "runtime.js": {
-      "sha256": "bc12108d637ff488f33f09dc495f58f7db45e63105c983723af538406f4317bf",
-      "bytes": 5202745
+      "sha256": "71cf48ede77dc6905be6ef532e2183871c8017f87aee975a2b4b28071eb618a4",
+      "bytes": 5199229
     },
     "THIRD_PARTY_NOTICES": {
       "sha256": "af56f9c65858dfd4a87907cc0c6ddb699cd833be301317ad74538c1d8401f22f",
@@ -28,7 +29,7 @@
     }
   },
   "sizes": {
-    "editorJs": 4058159,
+    "editorJs": 4053927,
     "css": 379670,
     "editorWorker": 307235,
     "jsonWorker": 437295

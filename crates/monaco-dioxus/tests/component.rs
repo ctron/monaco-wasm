@@ -16,6 +16,22 @@ use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen_test::*;
 use web_sys::{HtmlElement, window};
 
+use monaco_dioxus::{Module, ModuleContext};
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+#[derive(Debug)]
+struct TestModule;
+static INITIALIZATIONS: AtomicUsize = AtomicUsize::new(0);
+impl Module for TestModule {
+    fn id(&self) -> &'static str {
+        "adapter-test"
+    }
+    fn initialize(&self, _: &ModuleContext) -> Result<(), EditorError> {
+        INITIALIZATIONS.fetch_add(1, Ordering::SeqCst);
+        Ok(())
+    }
+}
+
 wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen(inline_js = r#"
@@ -147,6 +163,7 @@ fn Harness(props: HarnessProps) -> Element {
         div { class: "slot",
             if show() {
                 MonacoEditor {
+                    modules: [TestModule],
                     key: "{key}",
                     initial_value: props.initial_value.clone(),
                     language: language(),
@@ -205,6 +222,11 @@ impl Fixture {
     }
 
     fn handle(&self) -> EditorHandle {
+        assert_eq!(
+            INITIALIZATIONS.load(Ordering::SeqCst),
+            1,
+            "modules initialize once across component mounts"
+        );
         self.recorders
             .ready
             .borrow()

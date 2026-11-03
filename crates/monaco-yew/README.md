@@ -10,7 +10,7 @@ are bundled: add a Cargo dependency, with no npm install, CDN, or worker configu
 ```toml
 [dependencies]
 yew = { version = "0.23", features = ["csr"] }
-monaco-yew = "0.1"
+monaco-yew = "0.2"
 ```
 
 ```rust

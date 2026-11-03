@@ -23,7 +23,7 @@ GitHub Pages.
 1. Copy this directory.
 2. In `Cargo.toml`, replace everything inherited from this repository's workspace
    (`*.workspace = true`) with your own values: give the package a version, edition, and license,
-   and the dependencies their versions, for example `monaco-leptos = { version = "0.1", features = ["csr"] }`.
+   and the dependencies their versions, for example `monaco-leptos = { version = "0.2", features = ["csr"] }`.
 3. Keep `index.html` (the Trunk entry point) and edit `src/main.rs`.
 
 The parts worth copying:

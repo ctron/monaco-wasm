@@ -7,6 +7,7 @@ license.workspace = true
 publish = false
 
 [dependencies]
+monaco-yaml.workspace = true
 monaco-dioxus = { workspace = true, features = ["web"] }
 dioxus = { workspace = true, features = ["launch", "web", "macro", "html", "signals", "hooks"] }
 # Only for the playground's extras (formatting, download, theme detection).

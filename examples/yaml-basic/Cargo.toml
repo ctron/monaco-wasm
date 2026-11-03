@@ -1,0 +1,15 @@
+[package]
+name = "yaml-basic"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish = false
+
+[dependencies]
+monaco-yew.workspace = true
+monaco-yaml.workspace = true
+yew = { workspace = true, features = ["csr"] }
+
+[lints]
+workspace = true

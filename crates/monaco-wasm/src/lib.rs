@@ -67,8 +67,12 @@
 //! fields, so setting one back to its default resets it. Invalid values are rejected with
 //! [`EditorError::InvalidOptions`] before anything changes.
 //!
-//! The bundled runtime registers JSON (with validation in a worker), YAML (syntax highlighting,
-//! without validation), and plain text. [`set_theme`]
+//! The bundled runtime registers JSON (with validation in a worker) and plain text.
+//! YAML is supplied by the optional `monaco-yaml` crate: put its `Yaml` module in
+//! [`EditorConfig::modules`] and select `language = "yaml"`.
+//! Modules initialize before model creation, once per successful module ID per
+//! page. Registration is shared by all editors and persists until page unload;
+//! dropping an editor does not unregister its modules. [`set_theme`]
 //! switches the theme of every editor on the page; the built-in themes are `vs`, `vs-dark`,
 //! `hc-light`, and `hc-black`.
 //!
@@ -104,7 +108,9 @@
 
 mod editor;
 mod error;
+mod modules;
 mod options;
+pub use modules::{Module, ModuleContext, Modules};
 pub mod sys;
 
 pub use editor::{ContentChange, Editor, EditorHandle, set_theme};

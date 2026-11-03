@@ -11,6 +11,19 @@
 const ENVIRONMENT_MARKER = Symbol.for("monaco-wasm.environment");
 
 let editorApi = null;
+let monaco = null;
+const modules = new Set();
+const moduleWorkers = new Map();
+export function unregisterModuleWorker(label) { moduleWorkers.delete(label); }
+export function moduleRegistered(id) { return modules.has(id); }
+export function markModuleRegistered(id) { modules.add(id); }
+export function getMonaco() { getEditorApi(); return monaco; }
+export function registerModuleWorker(label, factory) {
+  if (!label || workerKind(label) !== null || moduleWorkers.has(label)) {
+    throw new Error(`monaco-wasm: worker label already registered or invalid: "${label}"`);
+  }
+  moduleWorkers.set(label, factory);
+}
 const workerUrls = new Map();
 let activeRelays = 0;
 
@@ -49,6 +62,8 @@ function installEnvironment() {
   globalThis.MonacoEnvironment = {
     [ENVIRONMENT_MARKER]: true,
     getWorker(_moduleId, label) {
+      const factory = moduleWorkers.get(label);
+      if (factory) return factory();
       const kind = workerKind(label);
       if (kind === null) {
         throw new Error(`monaco-wasm: no bundled worker for label "${label}"`);
@@ -78,7 +93,8 @@ export function getEditorApi() {
   }
   installEnvironment();
   installStyles();
-  editorApi = loadMonaco().editor;
+  monaco = loadMonaco();
+  editorApi = monaco.editor;
   return editorApi;
 }
 

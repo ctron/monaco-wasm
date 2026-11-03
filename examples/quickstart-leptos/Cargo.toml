@@ -7,6 +7,7 @@ license.workspace = true
 publish = false
 
 [dependencies]
+monaco-yaml.workspace = true
 leptos = { workspace = true, features = ["csr"] }
 monaco-leptos = { workspace = true, features = ["csr"] }
 # Only for the playground's extras (formatting, download, theme detection).

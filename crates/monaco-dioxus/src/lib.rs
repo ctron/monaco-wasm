@@ -9,7 +9,7 @@
 //! ```toml
 //! [dependencies]
 //! dioxus = { version = "0.7", features = ["web"] }
-//! monaco-dioxus = { version = "0.1", features = ["web"] }
+//! monaco-dioxus = { version = "0.2", features = ["web"] }
 //! ```
 //!
 //! Built with `dx`, the app works as is. Built with another tool such as Trunk, the page needs the
@@ -46,6 +46,7 @@
 //! | Prop | Type | Default | Behavior |
 //! | --- | --- | --- | --- |
 //! | `initial_value` | `String` | empty | Read once, on mount. |
+//! | `modules` | [`Modules`] | empty | Read once on mount; successful registration persists until page unload and is shared by all editors. |
 //! | `language` | `String` | `"plaintext"` | Updates the existing model. |
 //! | `options` | [`EditorOptions`] | defaults | Updates the existing editor. |
 //! | `class` | `String` | empty | Classes of the container. |
@@ -106,7 +107,8 @@
 
 use dioxus::prelude::*;
 pub use monaco_wasm::{
-    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, WordWrap, set_theme,
+    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, Module,
+    ModuleContext, Modules, WordWrap, set_theme,
 };
 use monaco_wasm::{Editor, validate_language};
 use std::cell::RefCell;
@@ -142,6 +144,9 @@ pub fn MonacoEditor(
     /// Read once, on mount. Changing it later has no effect.
     #[props(default, into)]
     initial_value: String,
+    /// Required modules, read once on mount; registration lasts until page unload.
+    #[props(default, into)]
+    modules: Modules,
     /// Monaco language ID.
     #[props(default = "plaintext".to_owned(), into)]
     language: String,
@@ -233,6 +238,7 @@ pub fn MonacoEditor(
     // Creates the editor once the host element exists. Only web builds have a DOM; on the server
     // the host stays empty.
     let onmounted = {
+        let modules = modules.clone();
         let state = state.clone();
         let language = language.clone();
         let options = options.clone();
@@ -250,6 +256,7 @@ pub fn MonacoEditor(
                 let element: web_sys::HtmlElement = event.as_web_event().unchecked_into();
                 let mut config = EditorConfig::default();
                 config.initial_value = initial_value.clone();
+                config.modules = modules.clone();
                 config.language = language.clone();
                 config.options = options.clone();
                 let accepted = (config.language.clone(), config.options.clone());
@@ -276,7 +283,14 @@ pub fn MonacoEditor(
                 }
             }
             #[cfg(not(feature = "web"))]
-            let _ = (&event, &state, &language, &options, &initial_value);
+            let _ = (
+                &event,
+                &state,
+                &language,
+                &options,
+                &initial_value,
+                &modules,
+            );
         }
     };
 

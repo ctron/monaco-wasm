@@ -13,7 +13,7 @@ Enable the `web` feature for web builds (in fullstack apps, only for the client 
 ```toml
 [dependencies]
 dioxus = { version = "0.7", features = ["web"] }
-monaco-dioxus = { version = "0.1", features = ["web"] }
+monaco-dioxus = { version = "0.2", features = ["web"] }
 ```
 
 ```rust
