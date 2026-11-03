@@ -8,7 +8,7 @@
       "title": "Yew",
       "description": "A `MonacoEditor` component for Yew 0.23.",
       "snippets": [
-        "[dependencies]\nyew = { version = \"0.23\", features = [\"csr\"] }\nmonaco-yew = \"0.1\"",
+        "[dependencies]\nyew = { version = \"0.23\", features = [\"csr\"] }\nmonaco-yew = \"0.2\"",
         "html! {\n    <MonacoEditor\n        language=\"json\"\n        initial_value=\"{}\"\n    />\n}"
       ],
       "link": "Open the Yew quickstart"
@@ -21,7 +21,7 @@
       "title": "Leptos",
       "description": "A `MonacoEditor` component for Leptos 0.8, with CSR, SSR, and hydration.",
       "snippets": [
-        "[dependencies]\nleptos = { version = \"0.8\", features = [\"csr\"] }\nmonaco-leptos = { version = \"0.1\", features = [\"csr\"] }",
+        "[dependencies]\nleptos = { version = \"0.8\", features = [\"csr\"] }\nmonaco-leptos = { version = \"0.2\", features = [\"csr\"] }",
         "view! {\n    <MonacoEditor\n        language=\"json\"\n        initial_value=\"{}\"\n    />\n}"
       ],
       "link": "Open the Leptos quickstart"
@@ -34,7 +34,7 @@
       "title": "Dioxus",
       "description": "A `MonacoEditor` component for Dioxus 0.7, for web and fullstack apps.",
       "snippets": [
-        "[dependencies]\ndioxus = { version = \"0.7\", features = [\"web\"] }\nmonaco-dioxus = { version = \"0.1\", features = [\"web\"] }",
+        "[dependencies]\ndioxus = { version = \"0.7\", features = [\"web\"] }\nmonaco-dioxus = { version = \"0.2\", features = [\"web\"] }",
         "rsx! {\n    MonacoEditor {\n        language: \"json\",\n        initial_value: \"{{}}\",\n    }\n}"
       ],
       "link": "Open the Dioxus quickstart"
@@ -92,6 +92,13 @@
       "source": "dioxus-hydrate",
       "title": "Dioxus, fullstack",
       "description": "A fullstack Dioxus app built with `dx`; the editor is created after hydration. Needs a server, so it is not hosted here."
+    },
+    {
+      "id": "yaml-basic",
+      "source": "yaml-basic",
+      "build": "trunk",
+      "title": "Optional YAML module",
+      "description": "YAML highlighting and worker-backed validation, enabled explicitly through the modules property."
     }
   ]
 }

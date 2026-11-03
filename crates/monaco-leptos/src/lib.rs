@@ -10,7 +10,7 @@
 //! ```toml
 //! [dependencies]
 //! leptos = { version = "0.8", features = ["csr"] }
-//! monaco-leptos = { version = "0.1", features = ["csr"] }
+//! monaco-leptos = { version = "0.2", features = ["csr"] }
 //! ```
 //!
 //! # Example
@@ -33,6 +33,7 @@
 //! | Prop | Type | Default | Behavior |
 //! | --- | --- | --- | --- |
 //! | `initial_value` | `String` | empty | Read once, on mount. |
+//! | `modules` | [`Modules`] | empty | Read once on mount; successful registration persists until page unload and is shared by all editors. |
 //! | `language` | `Signal<String>` | `"plaintext"` | Updates the existing model. |
 //! | `options` | `Signal<EditorOptions>` | defaults | Updates the existing editor; see [`EditorOptions`]. |
 //! | `class` | `Signal<String>` | none | Classes of the container. |
@@ -111,7 +112,8 @@
 use leptos::html::Div;
 use leptos::prelude::*;
 pub use monaco_wasm::{
-    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, WordWrap, set_theme,
+    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, Module,
+    ModuleContext, Modules, WordWrap, set_theme,
 };
 use monaco_wasm::{Editor, EditorConfig, validate_language};
 use web_sys::console;
@@ -136,6 +138,9 @@ pub fn MonacoEditor(
     /// Read once, on mount. Changing it later has no effect.
     #[prop(optional, into)]
     initial_value: String,
+    /// Required modules, read once on mount; registration lasts until page unload.
+    #[prop(optional, into)]
+    modules: Modules,
     /// Monaco language ID. Default: `"plaintext"`.
     #[prop(into, default = Signal::stored("plaintext".to_owned()))]
     language: Signal<String>,
@@ -182,6 +187,7 @@ pub fn MonacoEditor(
 
         let mut config = EditorConfig::default();
         config.initial_value = initial_value.clone();
+        config.modules = modules.clone();
         config.language = language.get_untracked();
         config.options = options.get_untracked();
         let accepted = (config.language.clone(), config.options.clone());

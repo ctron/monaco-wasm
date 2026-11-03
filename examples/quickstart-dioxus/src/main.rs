@@ -11,6 +11,7 @@ use monaco_dioxus::{
     ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, MonacoEditor, WordWrap,
     set_theme,
 };
+use monaco_yaml::Yaml;
 use serde_json::{Value, from_str, to_string_pretty};
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{Blob, BlobPropertyBag, HtmlAnchorElement, Url, console, window};
@@ -29,7 +30,7 @@ const SAMPLE: &str = r#"{
 
 const USAGE: &str = r#"[dependencies]
 dioxus = { version = "0.7", features = ["web"] }
-monaco-dioxus = { version = "0.1", features = ["web"] }
+monaco-dioxus = { version = "0.2", features = ["web"] }
 
 use dioxus::prelude::*;
 use monaco_dioxus::MonacoEditor;
@@ -294,6 +295,7 @@ fn App() -> Element {
             main {
                 // The component defaults to 20rem high; here it fills the page.
                 MonacoEditor {
+                    modules: Yaml,
                     class: "editor",
                     style: "height: 100%",
                     language: language(),

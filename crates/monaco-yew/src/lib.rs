@@ -6,7 +6,7 @@
 //! ```toml
 //! [dependencies]
 //! yew = { version = "0.23", features = ["csr"] }
-//! monaco-yew = "0.1"
+//! monaco-yew = "0.2"
 //! ```
 //!
 //! # Example
@@ -28,6 +28,7 @@
 //! | Prop | Type | Default | Behavior |
 //! | --- | --- | --- | --- |
 //! | `initial_value` | `AttrValue` | empty | Read once, on mount. |
+//! | `modules` | [`Modules`] | empty | Read once on mount; successful registration persists until page unload and is shared by all editors. |
 //! | `language` | `AttrValue` | `"plaintext"` | Updates the existing model. |
 //! | `options` | [`EditorOptions`] | defaults | Updates the existing editor. |
 //! | `class` | `Classes` | none | Classes of the container. |
@@ -94,7 +95,8 @@
 //! [`monaco_wasm`'s deployment notes](monaco_wasm#deployment).
 
 pub use monaco_wasm::{
-    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, WordWrap, set_theme,
+    self, ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, Module,
+    ModuleContext, Modules, WordWrap, set_theme,
 };
 use monaco_wasm::{Editor, EditorConfig, validate_language};
 use web_sys::{HtmlElement, console};
@@ -109,6 +111,9 @@ pub struct MonacoEditorProps {
     /// Read once, on mount. Changing it later has no effect.
     #[prop_or_default]
     pub initial_value: AttrValue,
+    /// Required modules, read once on mount; registration lasts until page unload.
+    #[prop_or_default]
+    pub modules: Modules,
     /// Monaco language ID; updates the existing model.
     #[prop_or(AttrValue::from("plaintext"))]
     pub language: AttrValue,
@@ -161,6 +166,7 @@ impl MonacoEditor {
         let props = ctx.props();
         let mut config = EditorConfig::default();
         config.initial_value = props.initial_value.to_string();
+        config.modules = props.modules.clone();
         config.language = props.language.to_string();
         config.options = props.options.clone();
 

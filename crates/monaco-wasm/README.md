@@ -11,7 +11,7 @@ This is the framework-free core. For components, see
 
 ```toml
 [dependencies]
-monaco-wasm = "0.1"
+monaco-wasm = "0.2"
 ```
 
 ```rust

@@ -24,7 +24,7 @@ server-side rendering, and deployment (including Content Security Policy require
 ```toml
 [dependencies]
 yew = { version = "0.23", features = ["csr"] }
-monaco-yew = "0.1"
+monaco-yew = "0.2"
 ```
 
 ```rust
@@ -47,7 +47,7 @@ Enable the same rendering mode (`csr`, `hydrate`, or `ssr`) as on Leptos:
 ```toml
 [dependencies]
 leptos = { version = "0.8", features = ["csr"] }
-monaco-leptos = { version = "0.1", features = ["csr"] }
+monaco-leptos = { version = "0.2", features = ["csr"] }
 ```
 
 ```rust
@@ -71,7 +71,7 @@ Enable the `web` feature (in fullstack apps, only for the client build):
 ```toml
 [dependencies]
 dioxus = { version = "0.7", features = ["web"] }
-monaco-dioxus = { version = "0.1", features = ["web"] }
+monaco-dioxus = { version = "0.2", features = ["web"] }
 ```
 
 ```rust
@@ -92,7 +92,7 @@ A complete example: [`examples/quickstart-dioxus`](examples/quickstart-dioxus)
 
 ```toml
 [dependencies]
-monaco-wasm = "0.1"
+monaco-wasm = "0.2"
 ```
 
 ```rust
@@ -108,13 +108,41 @@ fn mount_editor(host: &HtmlElement) -> Result<Editor, EditorError> {
 
 See [`examples/wasm-basic`](examples/wasm-basic).
 
+## Optional modules and migration to 0.2
+
+YAML is no longer built into the core runtime. Add `monaco-yaml = "0.2"`
+and pass its fieldless `Yaml` module to the editor:
+
+```rust
+use monaco_yew::{MonacoEditor, Modules};
+use monaco_yaml::Yaml;
+use yew::prelude::*;
+
+# fn example() -> Html {
+html! { <MonacoEditor language="yaml" modules={Modules::from([Yaml])} /> }
+# }
+```
+
+Leptos accepts `modules=[Yaml]` and Dioxus accepts `modules: [Yaml]`.
+Plain WASM applications set `config.modules = [Yaml].into()`. See [`examples/yaml-basic`](examples/yaml-basic).
+
+Modules initialize in list order before the editor model is created. A successful
+module ID initializes once per page, and registration is visible to all editors.
+The module list is read once on mount. Disposing an editor releases its editor
+and model, but module registration persists until page unload. Initialization
+errors prevent mounting and follow the existing error path; failed initialization
+can be retried. Applications without the YAML crate ship none of its assets.
+
+The YAML module includes highlighting, validation, completion, hover, and
+formatting. Remote schema downloads are disabled.
+
 ## Compatibility
 
 | Component | Support |
 | --- | --- |
 | Rust | 1.88 or newer |
 | Monaco | 0.57.0 (bundled) |
-| Languages | JSON (with validation), YAML, plain text |
+| Languages | JSON (with validation), plain text; YAML through `monaco-yaml` |
 | Yew | 0.23 |
 | Leptos | 0.8 |
 | Dioxus | 0.7 (web, fullstack) |

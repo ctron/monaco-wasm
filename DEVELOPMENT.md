@@ -54,6 +54,22 @@ npm run runtime:build   # writes crates/monaco-wasm/js/
 npm run runtime:check   # fails if the vendored files are stale
 ```
 
+## YAML module
+
+`crates/monaco-yaml` owns its generated runtime and worker assets. Its npm
+build dependencies are isolated under `tools/yaml`:
+
+```sh
+cd tools/yaml
+npm ci
+npm run runtime:build
+npm run runtime:check
+```
+
+The build checks that its providers do not bundle another editor runtime.
+`l10n-LICENSE` is the upstream vscode-l10n MIT license (the npm package omits it).
+Register a trusted publisher for `monaco-yaml` on crates.io before the first 0.2 release.
+
 ## Low-level bindings
 
 Maintainers only; needs Node and cargo. The script installs the pinned ts-gen on demand. See
@@ -130,8 +146,8 @@ and pushes. It does not publish.
 The tag triggers `.github/workflows/release.yml`. It runs the full CI workflow on the tagged commit
 (including the semver check of the new version against the previous release), checks that the tag
 matches the version of every crate (setting the tag's version with `cargo-workspaces` must not
-change any file), and only when both pass runs `cargo publish --workspace`: `monaco-wasm` first, then the components. It authenticates with
-crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the four crates
+change any file), and only when both pass runs `cargo publish --workspace`: `monaco-wasm` first, then the modules and components. It authenticates with
+crates.io [trusted publishing](https://crates.io/docs/trusted-publishing): each of the five crates
 has a trusted publisher on crates.io for the repository `ctron/monaco-wasm`, the workflow
 `release.yml`, and the environment `release`, so no API token is stored.
 

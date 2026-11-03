@@ -8,6 +8,8 @@ use crate::sys::OnOff;
 #[derive(Clone, Debug, PartialEq)]
 #[non_exhaustive]
 pub struct EditorConfig {
+    /// Extensions initialized once per page before model creation.
+    pub modules: crate::Modules,
     /// Initial document text. Default: empty.
     pub initial_value: String,
     /// Monaco language ID. Default: `"plaintext"`. Must not be blank.
@@ -18,6 +20,7 @@ pub struct EditorConfig {
 impl Default for EditorConfig {
     fn default() -> Self {
         Self {
+            modules: crate::Modules::default(),
             initial_value: String::new(),
             language: "plaintext".into(),
             options: EditorOptions::default(),

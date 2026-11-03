@@ -13,7 +13,7 @@ Enable the same rendering mode as your Leptos build: `csr`, `hydrate`, or `ssr`.
 ```toml
 [dependencies]
 leptos = { version = "0.8", features = ["csr"] }
-monaco-leptos = { version = "0.1", features = ["csr"] }
+monaco-leptos = { version = "0.2", features = ["csr"] }
 ```
 
 ```rust

@@ -1,0 +1,29 @@
+{
+  "packages": {
+    "@vscode/l10n": "0.0.18",
+    "jsonc-parser": "3.3.1",
+    "monaco-editor": "0.57.0",
+    "monaco-languageserver-types": "0.4.1",
+    "monaco-marker-data-provider": "1.2.5",
+    "monaco-worker-manager": "2.0.1",
+    "monaco-yaml": "5.5.1",
+    "path-browserify": "1.0.1",
+    "prettier": "3.9.10",
+    "vscode-languageserver-textdocument": "1.0.16",
+    "vscode-languageserver-types": "3.18.5",
+    "vscode-uri": "3.2.0",
+    "yaml": "2.9.1"
+  },
+  "inputs": {
+    "build.mjs": "869faa678c72bf868b4c4ee6eb49ad393b14814d7ca80c816e5268da0f01efb5",
+    "package-lock.json": "c11f042158607bb7964f2118d278ac261bbb6ea3f2e9274099426a0a27b014a8",
+    "src/main.js": "6ad53b285d12fdb8567ee8f9ca770d68c2f3a76ed6a8c5c6d271f6d7b4a56ae7",
+    "l10n-LICENSE": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+    "../runtime/source-patches.mjs": "c0a99a8b4de44e89cc91162cae1305c4223941953f90f4f57444e1e7ad69f6ce"
+  },
+  "bytes": {
+    "main": 26206,
+    "worker": 1059738
+  },
+  "sha256": "92150be3841b85e056338417b0a9bbb5139ea95f1589b14db5e69a54d23972c9"
+}

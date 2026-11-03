@@ -6,6 +6,8 @@
 //! never copies the document into Yew state.
 
 use js_sys::Array;
+use monaco_yaml::Yaml;
+use monaco_yew::Modules;
 use monaco_yew::{
     ContentChange, EditorError, EditorHandle, EditorOptions, LineNumbers, MonacoEditor, WordWrap,
     set_theme,
@@ -33,7 +35,7 @@ const SAMPLE: &str = r#"{
 
 const USAGE: &str = r#"[dependencies]
 yew = { version = "0.23", features = ["csr"] }
-monaco-yew = "0.1"
+monaco-yew = "0.2"
 
 use monaco_yew::MonacoEditor;
 use yew::prelude::*;
@@ -325,6 +327,7 @@ fn app() -> Html {
             <main>
                 // The component defaults to 20rem high; here it fills the page.
                 <MonacoEditor
+                    modules={Modules::from([Yaml])}
                     class="editor"
                     style="height: 100%"
                     language={(*language).clone()}

@@ -135,6 +135,7 @@ impl Editor {
         ensure_browser_target()?;
 
         let api = sys::editor_api().map_err(EditorError::js("initialize runtime"))?;
+        config.modules.initialize()?;
         let model = api
             .try_create_model(&config.initial_value, &config.language)
             .map_err(EditorError::js("create model"))?;

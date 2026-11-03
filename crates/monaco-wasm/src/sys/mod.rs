@@ -15,8 +15,11 @@ mod generated;
 mod manual;
 
 pub use generated::*;
-pub(crate) use manual::queue_microtask;
 pub use manual::{ChangeRelay, active_relay_count};
+pub(crate) use manual::{
+    mark_module_registered, module_monaco, module_registered, queue_microtask,
+    register_module_worker, unregister_module_worker,
+};
 use wasm_bindgen::JsValue;
 
 /// Returns the `monaco.editor` API, initializing the bundled runtime on
